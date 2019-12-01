@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="questionLoader" class="ru.otus.svdovin.homework01.service.QuestionLoaderImpl">
+        <constructor-arg name="questionsFileName" value="/questions.csv"/>
+    </bean>
+
+    <bean id="examService" class="ru.otus.svdovin.homework01.service.ExamServiceImpl">
+        <constructor-arg name="questionLoader" ref="questionLoader"/>
+        <constructor-arg name="successRate" value="3"/>
+    </bean>
+
+    <bean id="startService" class="ru.otus.svdovin.homework01.service.StartServiceImpl">
+        <constructor-arg name="examService" ref="examService"/>
+    </bean>
+
+</beans>
