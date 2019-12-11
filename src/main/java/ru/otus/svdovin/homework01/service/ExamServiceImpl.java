@@ -2,10 +2,9 @@ package ru.otus.svdovin.homework01.service;
 
 import ru.otus.svdovin.homework01.domain.ExamResult;
 import ru.otus.svdovin.homework01.domain.Question;
+import ru.otus.svdovin.homework01.exception.FileQuestionsNotExistsException;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 
 public class ExamServiceImpl implements ExamService {
 
@@ -17,18 +16,13 @@ public class ExamServiceImpl implements ExamService {
         this.successRate = successRate;
     }
 
-    public ExamResult examine(Scanner scanner) {
-        List<Question> questions = null;
-        try {
-            questions = questionLoader.loadQuestions();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ExamResult examine(ConsoleService consoleService) throws FileQuestionsNotExistsException {
+        List<Question> questions = questionLoader.loadQuestions();
         int correctAnswerCount = 0;
 
         for(Question question : questions) {
-            System.out.println(question.getTextQuestion());
-            String answer = scanner.nextLine();
+            consoleService.outString(question.getTextQuestion());
+            String answer = consoleService.inString();
             if (answer.equalsIgnoreCase(question.getCorrectAnswer())) {
                 correctAnswerCount++;
             }

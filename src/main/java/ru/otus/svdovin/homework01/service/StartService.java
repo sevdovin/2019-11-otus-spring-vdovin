@@ -1,6 +1,8 @@
 package ru.otus.svdovin.homework01.service;
 
+import ru.otus.svdovin.homework01.exception.FileQuestionsNotExistsException;
+
 public interface StartService {
 
-    public void startExam();
+    void startExam() throws FileQuestionsNotExistsException;
 }

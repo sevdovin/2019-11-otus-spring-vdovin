@@ -2,6 +2,7 @@ package ru.otus.svdovin.homework01.service;
 
 import org.junit.Test;
 import ru.otus.svdovin.homework01.domain.Question;
+import ru.otus.svdovin.homework01.exception.FileQuestionsNotExistsException;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class QuestionLoaderTest {
 
     @Test
-    public void loadQuestionsTest() throws IOException {
+    public void loadQuestionsTest() throws FileQuestionsNotExistsException {
         QuestionLoader questionLoader = new QuestionLoaderImpl("/questions.csv");
         List<Question> questions = questionLoader.loadQuestions();
 
