@@ -1,7 +1,7 @@
 package ru.otus.svdovin.homework01.service;
 
 import ru.otus.svdovin.homework01.domain.Question;
-import ru.otus.svdovin.homework01.exception.FileQuestionsNotExistsException;
+import ru.otus.svdovin.homework01.exception.QuestionsLoadingFailedException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ public class QuestionLoaderImpl implements QuestionLoader {
     }
 
     @Override
-    public List<Question> loadQuestions() throws FileQuestionsNotExistsException {
+    public List<Question> loadQuestions() throws QuestionsLoadingFailedException {
         InputStream inputStream = QuestionLoaderImpl.class.getResourceAsStream(questionsFileName);
         if (inputStream == null) {
-            throw new FileQuestionsNotExistsException("File with questions is absent!");
+            throw new QuestionsLoadingFailedException("File with questions is absent!");
         }
         Scanner scanner = new Scanner(inputStream, "UTF-8");
         List<Question> questions = new ArrayList<Question>();

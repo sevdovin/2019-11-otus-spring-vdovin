@@ -1,7 +1,7 @@
 package ru.otus.svdovin.homework01.service;
 
 import ru.otus.svdovin.homework01.domain.ExamResult;
-import ru.otus.svdovin.homework01.exception.FileQuestionsNotExistsException;
+import ru.otus.svdovin.homework01.exception.QuestionsLoadingFailedException;
 
 public class StartServiceImpl implements StartService {
 
@@ -14,23 +14,24 @@ public class StartServiceImpl implements StartService {
     String firstName = null;
 
     private final ExamService examService;
+    private  final IOService ioService;
 
-    public StartServiceImpl(ExamService examService) {
+    public StartServiceImpl(ExamService examService, IOService ioService) {
         this.examService = examService;
+        this.ioService = ioService;
     }
 
     @Override
-    public void startExam() throws FileQuestionsNotExistsException {
-        ConsoleService consoleService = new ConsoleService(System.in, System.out);
-        getFIO(consoleService);
-        ExamResult examResult = examService.examine(consoleService);
-        consoleService.outString(String.format(examResult.isPassed() ? SUCCESS : FAIL, lastName + " " + firstName, examResult.getCorrectAnswerCount()));
+    public void startExam() throws QuestionsLoadingFailedException {
+        getFIO();
+        ExamResult examResult = examService.examine(ioService);
+        ioService.outString(String.format(examResult.isPassed() ? SUCCESS : FAIL, lastName + " " + firstName, examResult.getCorrectAnswerCount()));
     }
 
-    private void getFIO(ConsoleService consoleService) {
-        consoleService.outString(LASTNAME);
-        lastName = consoleService.inString();
-        consoleService.outString(FIRSTNAME);
-        firstName = consoleService.inString();
+    private void getFIO() {
+        ioService.outString(LASTNAME);
+        lastName = ioService.inString();
+        ioService.outString(FIRSTNAME);
+        firstName = ioService.inString();
     }
 }

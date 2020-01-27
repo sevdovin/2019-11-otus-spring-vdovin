@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class ConsoleService {
+public class ConsoleService implements IOService {
 
     private final PrintStream printStream;
     private final Scanner scanner;
@@ -15,10 +15,12 @@ public class ConsoleService {
         this.scanner = new Scanner(inputStream);
     }
 
+    @Override
     public void outString(String text) {
         printStream.println(text);
     }
 
+    @Override
     public String inString() {
         return scanner.nextLine();
     }
