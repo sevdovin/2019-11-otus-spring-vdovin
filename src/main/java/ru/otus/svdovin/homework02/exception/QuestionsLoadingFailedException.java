@@ -1,4 +1,4 @@
-package ru.otus.svdovin.homework01.exception;
+package ru.otus.svdovin.homework02.exception;
 
 public class QuestionsLoadingFailedException extends Exception {
 

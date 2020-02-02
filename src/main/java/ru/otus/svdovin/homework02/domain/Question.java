@@ -1,4 +1,4 @@
-package ru.otus.svdovin.homework01.domain;
+package ru.otus.svdovin.homework02.domain;
 
 public class Question {
 

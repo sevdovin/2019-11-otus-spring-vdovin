@@ -1,29 +1,32 @@
-package ru.otus.svdovin.homework01.service;
+package ru.otus.svdovin.homework02.service;
 
-import ru.otus.svdovin.homework01.domain.Question;
-import ru.otus.svdovin.homework01.exception.QuestionsLoadingFailedException;
+import org.springframework.stereotype.Service;
+import ru.otus.svdovin.homework02.config.QuestionSettings;
+import ru.otus.svdovin.homework02.domain.Question;
+import ru.otus.svdovin.homework02.exception.QuestionsLoadingFailedException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+@Service
 public class QuestionLoaderImpl implements QuestionLoader {
 
-    private final String questionsFileName;
+    private final QuestionSettings questionSettings;
 
-    public QuestionLoaderImpl(String questionsFileName) {
-        this.questionsFileName = questionsFileName;
+    public QuestionLoaderImpl(QuestionSettings questionSettings) {
+        this.questionSettings = questionSettings;
     }
 
     @Override
     public List<Question> loadQuestions() throws QuestionsLoadingFailedException {
-        InputStream inputStream = QuestionLoaderImpl.class.getResourceAsStream(questionsFileName);
+        InputStream inputStream = QuestionLoaderImpl.class.getResourceAsStream(questionSettings.getQuestionFileName());
         if (inputStream == null) {
             throw new QuestionsLoadingFailedException("File with questions is absent!");
         }
         Scanner scanner = new Scanner(inputStream, "UTF-8");
-        List<Question> questions = new ArrayList<Question>();
+        List<Question> questions = new ArrayList<>();
         while (scanner.hasNextLine()) {
             String[] items = scanner.nextLine().split(";");
             if (items.length == 2) {

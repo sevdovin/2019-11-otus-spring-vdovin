@@ -1,10 +1,13 @@
-package ru.otus.svdovin.homework01.service;
+package ru.otus.svdovin.homework02.service;
+
+import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+@Service
 public class ConsoleService implements IOService {
 
     private final PrintStream printStream;
@@ -22,6 +25,12 @@ public class ConsoleService implements IOService {
 
     @Override
     public String inString() {
+        return scanner.nextLine();
+    }
+
+    @Override
+    public String inString(String text) {
+        outString(text);
         return scanner.nextLine();
     }
 }
