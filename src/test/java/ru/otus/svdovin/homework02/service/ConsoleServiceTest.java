@@ -3,6 +3,7 @@ package ru.otus.svdovin.homework02.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.otus.svdovin.homework02.domain.ConsoleContext;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,7 +29,8 @@ public class ConsoleServiceTest {
     void setUp() {
         outputStream = new ByteArrayOutputStream();
         inputStream = new ByteArrayInputStream(testInputString.getBytes(StandardCharsets.UTF_8));
-        consoleService = new ConsoleService(inputStream, outputStream);
+        ConsoleContext consoleContext = new ConsoleContext(inputStream, outputStream);
+        consoleService = new ConsoleService(consoleContext);
     }
 
     @Test

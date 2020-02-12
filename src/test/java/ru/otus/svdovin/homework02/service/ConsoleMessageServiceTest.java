@@ -71,8 +71,10 @@ public class ConsoleMessageServiceTest {
     @Test
     @DisplayName("вводить строку")
     public void readLnTest() {
-        consoleMessageService.readLn();
+        given(ioService.inString()).willReturn("test");
+        String result = consoleMessageService.readLn();
         verify(ioService, times(1)).inString();
+        assertEquals("test", result);
     }
 
     @Test
@@ -80,10 +82,12 @@ public class ConsoleMessageServiceTest {
     public void readLnWithPrintMessageByKeyTest() {
         given(settings.getQuestionLocale()).willReturn(Locale.US);
         given(ms.getMessage("test", null, Locale.US)).willReturn("test_en");
-        consoleMessageService.readLn("test");
+        given(ioService.inString("test_en")).willReturn("test_result");
+        String result = consoleMessageService.readLn("test");
         verify(settings, times(1)).getQuestionLocale();
         verify(ms, times(1)).getMessage("test", null, Locale.US);
         verify(ioService, times(1)).inString("test_en");
+        assertEquals("test_result", result);
     }
 
     @Test
