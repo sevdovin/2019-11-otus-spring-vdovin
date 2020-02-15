@@ -1,0 +1,11 @@
+spring:
+  messages:
+    basename: i18n/bundle
+    encoding: UTF-8
+
+application:
+  success-rate: 3
+  locale: ru_RU
+  question-file-name-base: questions
+
+
