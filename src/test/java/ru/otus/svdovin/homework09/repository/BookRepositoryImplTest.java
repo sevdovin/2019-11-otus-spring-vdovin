@@ -9,9 +9,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.svdovin.homework09.domain.Author;
 import ru.otus.svdovin.homework09.domain.Book;
-import ru.otus.svdovin.homework09.domain.Comment;
 import ru.otus.svdovin.homework09.domain.Genre;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +36,6 @@ class BookRepositoryImplTest {
     private static final int TEST_GENRE_ID_BOOK_COUNT = 3;
     private static final int BOOKS_COUNT_INT = 5;
     private static final long BOOKS_COUNT_LONG = 5;
-    private static final String TEST_COMMENT = "Comment 1";
-    private static final int TEST_BOOK_COMMENT_COUNT_INT = 2;
 
     @Autowired
     private BookRepositoryImpl bookRepository;
@@ -48,9 +46,9 @@ class BookRepositoryImplTest {
     @DisplayName("добавлять книгу в БД")
     @Test
     void shouldInsertBook() {
-        val author = new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME);
+        List<Author> list = Collections.singletonList(new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME));
         val genre = new Genre(TEST_GENRE_ID, TEST_GENRE_NAME);
-        Book book = new Book(0, NEW_BOOK_NAME, author, genre);
+        Book book = new Book(0, NEW_BOOK_NAME, genre, list);
         long newId = bookRepository.insert(book);
         book.setBookId(newId);
         val actual = em.find(Book.class, newId);
@@ -60,32 +58,29 @@ class BookRepositoryImplTest {
     @DisplayName("изменять наименование книги в БД")
     @Test
     void shouldUpdateBook() {
-        Book book1 = em.find(Book.class, TEST_AUTHOR_ID);
+        val book1 = em.find(Book.class, TEST_BOOK_ID);
         String oldName = book1.getBookName();
+        em.detach(book1);
         book1.setBookName(NEW_BOOK_NAME);
-        Book book2 = bookRepository.update(book1);
-        assertAll("Книга изменилась",
-                () -> assertThat(book2).isNotNull(),
-                () -> assertThat(book2).isEqualToComparingFieldByField(book1),
-                () -> assertThat(book2.getBookName()).isNotEqualTo(oldName)
-        );
+        val book2 = bookRepository.update(book1);
+        assertThat(book2.getBookName()).isNotEqualTo(oldName).isEqualTo(NEW_BOOK_NAME);
     }
 
     @DisplayName("удалять книгу")
     @Test
     void shouldDeleteBook() {
-        Book book1 = em.find(Book.class, TEST_AUTHOR_ID);
-        bookRepository.deleteById(TEST_AUTHOR_ID);
-        assertAll("Книга удалена",
-                () -> assertThat(book1).isNotNull(),
-                () -> assertThat(em.find(Book.class, TEST_AUTHOR_ID)).isNull()
-        );
+        val book1 = em.find(Book.class, TEST_BOOK_ID);
+        assertThat(book1).isNotNull();
+        em.detach(book1);
+        bookRepository.deleteById(TEST_BOOK_ID);
+        val book2 = em.find(Book.class, TEST_BOOK_ID);
+        assertThat(book2).isNull();
     }
 
     @DisplayName("возвращать книгу по ее id")
     @Test
     void shouldFindBookById() {
-        Optional<Book> book = bookRepository.getById(TEST_AUTHOR_ID);
+        Optional<Book> book = bookRepository.getById(TEST_BOOK_ID);
         assertThat(book).isNotEmpty().get()
                 .hasFieldOrPropertyWithValue("bookName", TEST_BOOK_NAME);
     }
@@ -102,7 +97,7 @@ class BookRepositoryImplTest {
     @DisplayName("возвращать список книг по id автора")
     @Test
     void testGetBooksByAuthorId() {
-        List<Book> bookList = bookRepository.getByAuthorId(TEST_AUTHOR_ID);
+        List<Book> bookList = bookRepository.getByAuthorId(TEST_BOOK_ID);
         assertThat(bookList).isNotNull().hasSize(TEST_AUTHOR_ID_BOOK_COUNT);
     }
 
@@ -143,12 +138,5 @@ class BookRepositoryImplTest {
                 () -> assertThat(bookRepository.existsByName(TEST_BOOK_NAME)).isEqualTo(true),
                 () -> assertThat(bookRepository.existsByName(TEST_BOOK_NAME_NOT_EXISTS)).isEqualTo(false)
         );
-    }
-
-    @DisplayName("возвращать список комментариев по id книги")
-    @Test
-    void shouldFindCommentsByBookId() {
-        List<Comment> commentList = bookRepository.getCommentsByBookId(TEST_BOOK_ID);
-        assertThat(commentList).isNotNull().hasSize(TEST_BOOK_COMMENT_COUNT_INT);
     }
 }

@@ -38,10 +38,9 @@ class GenreRepositoryImplTest {
     @Test
     void shouldInsertGenre() {
         val genre = new Genre(0, GENRE_NEW_NAME);
-        genreRepository.insert(genre);
-        assertThat(genre.getGenreId()).isGreaterThan(0);
-        val actualGenre = em.find(Genre.class, genre.getGenreId());
-        assertThat(actualGenre).isNotNull().isEqualToComparingFieldByField(genre);
+        long newId = genreRepository.insert(genre);
+        val actual = em.find(Genre.class, newId);
+        assertThat(actual).isNotNull().isEqualToComparingFieldByField(genre);
     }
 
     @DisplayName("изменять наименование жанра")
@@ -49,24 +48,21 @@ class GenreRepositoryImplTest {
     void shouldUpdateGenreName() {
         Genre genre1 = em.find(Genre.class, GENRE_ID_EXIST);
         String oldName = genre1.getGenreName();
+        em.detach(genre1);
         genre1.setGenreName(GENRE_NEW_NAME);
         Genre genre2 = genreRepository.update(genre1);
-        assertAll("Жанр изменился",
-                () -> assertThat(genre2).isNotNull(),
-                () -> assertThat(genre2).isEqualToComparingFieldByField(genre1),
-                () -> assertThat(genre2.getGenreName()).isNotEqualTo(oldName)
-        );
+        assertThat(genre2.getGenreName()).isNotEqualTo(oldName).isEqualTo(GENRE_NEW_NAME);
     }
 
     @DisplayName("удалять жанр")
     @Test
     void shouldDeleteGenre() {
-        Genre genre1 = em.find(Genre.class, GENRE_ID_EXIST);
+        val genre1 = em.find(Genre.class, GENRE_ID_EXIST);
+        assertThat(genre1).isNotNull();
+        em.detach(genre1);
         genreRepository.deleteById(GENRE_ID_EXIST);
-        assertAll("Жанр удален",
-                () -> assertThat(genre1).isNotNull(),
-                () -> assertThat(em.find(Genre.class, GENRE_ID_EXIST)).isNull()
-        );
+        val genre2 = em.find(Genre.class, GENRE_ID_EXIST);
+        assertThat(genre2).isNull();
     }
 
     @DisplayName("возвращать жанр по его id")
@@ -117,7 +113,4 @@ class GenreRepositoryImplTest {
                 () -> assertThat(genreRepository.existsByName(GENRE_NAME_NOT_EXISTS)).isEqualTo(false)
         );
     }
-
-
-
 }

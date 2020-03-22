@@ -29,41 +29,56 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
     @Override
     public void deleteById(long id) {
-        Author author = em.find(Author.class, id);
-        em.remove(author);
+        Query query = em.createQuery("delete from Author a " +
+                "where a.authorId = :id")
+                .setParameter("id", id);
+        query.executeUpdate();
     }
 
     @Override
     public Optional<Author> getById(long id) {
-        Author author = em.find(Author.class, id);
-        return Optional.ofNullable(author);
+        TypedQuery<Author> query = em.createQuery("select a from Author a " +
+                "where a.authorId = :id", Author.class)
+                .setParameter("id", id);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<Author> getByName(String name) {
-        return em.createQuery("select a from Author a where a.authorName = :name", Author.class)
-                .setParameter("name", name).getResultList();
+        return em.createQuery("select a from Author a " +
+                "where a.authorName = :name", Author.class)
+                .setParameter("name", name)
+                .getResultList();
     }
 
     @Override
     public List<Author> getAll() {
-        return em.createQuery("select a from Author a", Author.class).getResultList();
+        return em.createQuery("select a from Author a", Author.class)
+                .getResultList();
     }
 
     @Override
     public long count() {
-        return em.createQuery("select count(a) from Author a", Long.class).getSingleResult();
+        return em.createQuery("select count(a) from Author a", Long.class)
+                .getSingleResult();
     }
 
     @Override
     public boolean existsById(long id) {
         return em.createQuery("select count(a) > 0 from Author a where a.id = :id", Boolean.class)
-                .setParameter("id", id).getSingleResult();
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Override
     public boolean existsByName(String name) {
-        return em.createQuery("select count(a) > 0 from Author a where a.authorName = :name", Boolean.class)
-                .setParameter("name", name).getSingleResult();
+        return em.createQuery("select count(a) > 0 from Author a " +
+                "where a.authorName = :name", Boolean.class)
+                .setParameter("name", name)
+                .getSingleResult();
     }
 }

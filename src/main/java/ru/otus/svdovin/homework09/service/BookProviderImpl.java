@@ -2,7 +2,6 @@ package ru.otus.svdovin.homework09.service;
 
 import org.springframework.stereotype.Service;
 import ru.otus.svdovin.homework09.domain.Book;
-import ru.otus.svdovin.homework09.domain.Comment;
 import ru.otus.svdovin.homework09.repository.BookRepository;
 
 import java.util.List;
@@ -65,10 +64,5 @@ public class BookProviderImpl implements BookProvider {
     @Override
     public boolean existsByName(String name) {
         return bookRepository.existsByName(name);
-    }
-
-    @Override
-    public List<Comment> getCommentsByBookId(long id) {
-        return bookRepository.getCommentsByBookId(id);
     }
 }

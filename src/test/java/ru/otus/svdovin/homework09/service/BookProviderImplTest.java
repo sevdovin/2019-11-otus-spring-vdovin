@@ -6,14 +6,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.svdovin.homework09.domain.Author;
 import ru.otus.svdovin.homework09.domain.Book;
-import ru.otus.svdovin.homework09.domain.Comment;
 import ru.otus.svdovin.homework09.domain.Genre;
 import ru.otus.svdovin.homework09.repository.BookRepository;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +45,6 @@ class BookProviderImplTest {
     @DisplayName("должен корректно добавлять книгу")
     void shouldCeateBook() {
         Book book = new Book(NEW_BOOK_ID, NEW_BOOK_NAME,
-                new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME),
                 new Genre(TEST_GENRE_ID, TEST_GENRE_NAME));
         Mockito.when(bookRepository.insert(book)).thenReturn(NEW_BOOK_ID);
         long newId = bookProvider.createBook(book);
@@ -59,7 +55,6 @@ class BookProviderImplTest {
     @DisplayName("возвращать ожидаемую книгу по ее id")
     void shouldReturnExpectedBookById() {
         Book book = new Book(NEW_BOOK_ID, NEW_BOOK_NAME,
-                new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME),
                 new Genre(TEST_GENRE_ID, TEST_GENRE_NAME));
         Mockito.when(bookRepository.getById(NEW_BOOK_ID)).thenReturn(Optional.of(book));
         Book actual = bookProvider.getBookById(NEW_BOOK_ID).orElse(null);
@@ -70,7 +65,6 @@ class BookProviderImplTest {
     @DisplayName("возвращать ожидаемую книгу по ее имени")
     void shouldReturnExpectedBookByName() {
         Book book = new Book(NEW_BOOK_ID, NEW_BOOK_NAME,
-                new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME),
                 new Genre(TEST_GENRE_ID, TEST_GENRE_NAME));
         List<Book> list = new ArrayList<>();
         list.add(book);
@@ -86,7 +80,6 @@ class BookProviderImplTest {
     @DisplayName("возвращать все книги")
     void shouldReturnAllBooks() {
         Book book = new Book(NEW_BOOK_ID, NEW_BOOK_NAME,
-                new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME),
                 new Genre(TEST_GENRE_ID, TEST_GENRE_NAME));
         List<Book> list = new ArrayList<>();
         list.add(book);
@@ -102,7 +95,6 @@ class BookProviderImplTest {
     @DisplayName("изменять ожидаемую книгу")
     void shouldUpdateExpectedBook() {
         Book book = new Book(NEW_BOOK_ID, NEW_BOOK_NAME,
-                new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME),
                 new Genre(TEST_GENRE_ID, TEST_GENRE_NAME));
         bookProvider.updateBook(book);
         verify(bookRepository, times(1)).update(book);
@@ -119,7 +111,6 @@ class BookProviderImplTest {
     @DisplayName("возвращать ожидаемые книги по идентификатору автора")
     void shouldReturnExpectedBookByAuthorId() {
         Book book = new Book(NEW_BOOK_ID, NEW_BOOK_NAME,
-                new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME),
                 new Genre(TEST_GENRE_ID, TEST_GENRE_NAME));
         List<Book> list = new ArrayList<>();
         list.add(book);
@@ -135,7 +126,6 @@ class BookProviderImplTest {
     @DisplayName("возвращать ожидаемые книги по идентификатору жанра")
     void shouldReturnExpectedBookByGenreId() {
         Book book = new Book(NEW_BOOK_ID, NEW_BOOK_NAME,
-                new Author(TEST_AUTHOR_ID, TEST_AUTHOR_NAME),
                 new Genre(TEST_GENRE_ID, TEST_GENRE_NAME));
         List<Book> list = new ArrayList<>();
         list.add(book);
@@ -166,18 +156,6 @@ class BookProviderImplTest {
         assertAll("Существование наименования книги",
                 () -> assertThat(bookProvider.existsByName(TEST_BOOK_NAME)).isEqualTo(true),
                 () -> assertThat(bookProvider.existsByName(TEST_BOOK_NAME_NOT_EXISTS)).isEqualTo(false)
-        );
-    }
-
-    @Test
-    @DisplayName("возвращать ожидаемый список комментариев по идентификатору книги")
-    void shouldReturnExpectedCommentsByBookId() {
-        List<Comment> listComment = Collections.singletonList(new Comment());
-        Mockito.when(bookRepository.getCommentsByBookId(TEST_BOOK_ID)).thenReturn(listComment);
-        List<Comment> actual = bookProvider.getCommentsByBookId(TEST_BOOK_ID);
-        assertAll("Список комментариев",
-                () -> assertThat(actual.size()).isEqualTo(1),
-                () -> assertThat(actual).isEqualTo(listComment)
         );
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import ru.otus.svdovin.homework09.domain.Book;
 import ru.otus.svdovin.homework09.domain.Comment;
 
 import java.util.List;
@@ -37,22 +38,22 @@ class CommentRepositoryImplTest {
     @DisplayName("добавлять комментарий в БД")
     @Test
     void shouldInsertComment() {
-        val comment = new Comment(0, TEST_COMMENT);
+        val book = em.find(Book.class, TEST_BOOK_ID);
+        val comment = new Comment(0, TEST_COMMENT, book);
         long newId = commentRepository.insert(comment);
-        comment.setCommentId(newId);
         val actual = em.find(Comment.class, newId);
         assertThat(actual).isNotNull().isEqualToComparingFieldByField(comment);
     }
 
-    @DisplayName("удалять комментаритй")
+    @DisplayName("удалять комментарий")
     @Test
     void shouldDeleteComment() {
-        Comment comment1 = em.find(Comment.class, TEST_COMMENT_ID);
+        val comment1 = em.find(Comment.class, TEST_COMMENT_ID);
+        assertThat(comment1).isNotNull();
+        em.detach(comment1);
         commentRepository.deleteById(TEST_COMMENT_ID);
-        assertAll("Комментарий удален",
-                () -> assertThat(comment1).isNotNull(),
-                () -> assertThat(em.find(Comment.class, TEST_COMMENT_ID)).isNull()
-        );
+        val comment2 = em.find(Comment.class, TEST_COMMENT_ID);
+        assertThat(comment2).isNull();
     }
 
     @DisplayName("возвращать комментарий по его id")

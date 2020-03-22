@@ -29,4 +29,8 @@ public class Comment {
         this.commentId = commentId;
         this.comment = comment;
     }
+
+    public String toString() {
+        return String.format("Комментарий id=%d, книга=\"%s\", текст=\"%s\"", commentId, book, comment);
+    }
 }

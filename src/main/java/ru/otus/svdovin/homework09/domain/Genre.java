@@ -20,4 +20,8 @@ public class Genre {
 
     @Column(name = "NAME")
     private String genreName;
+
+    public String toString() {
+        return String.format("Жанр id=%d, наименование=\"%s\"", genreId, genreName);
+    }
 }

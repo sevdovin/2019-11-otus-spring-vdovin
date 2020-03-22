@@ -1,7 +1,6 @@
 package ru.otus.svdovin.homework09.repository;
 
 import ru.otus.svdovin.homework09.domain.Book;
-import ru.otus.svdovin.homework09.domain.Comment;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,5 +17,5 @@ public interface BookRepository {
     long count();
     boolean existsById(long id);
     boolean existsByName(String name);
-    List<Comment> getCommentsByBookId(long id);
 }
+

@@ -91,4 +91,5 @@ class CommentProviderImplTest {
                 () -> assertThat(commentProvider.existsCommentByBookId(DEFAULT_BOOK_ID_NOT_EXISTS)).isEqualTo(false)
         );
     }
+
 }

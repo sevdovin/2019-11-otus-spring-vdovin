@@ -22,27 +22,23 @@ public class Book {
     @Column(name = "NAME")
     private String bookName;
 
-    @OneToOne
-    @JoinColumn(name = "AUTHORID")
-    private Author author;
-
-    @OneToOne
-    @JoinColumn(name = "GENREID")
+    @ManyToOne
+    @JoinColumn(name = "GENREID", referencedColumnName = "ID")
     private Genre genre;
 
-    @OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOOKID")
-    private List<Comment> comments;
+    @ManyToMany(targetEntity = Author.class, fetch = FetchType.LAZY, cascade={CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "BOOKS_AUTHORS",
+            joinColumns = @JoinColumn(name = "BOOKID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "AUTHORID", referencedColumnName = "ID"))
+    private List<Author> authors;
 
-    public Book(long bookId, String bookName, Author author, Genre genre) {
+    public Book(long bookId, String bookName, Genre genre) {
         this.bookId = bookId;
         this.bookName = bookName;
-        this.author = author;
         this.genre = genre;
     }
 
     public String toString() {
-        return String.format("Книга id=%d, наименование=\"%s\", автор=\"%s\", жанр=\"%s\"", bookId, bookName, author, genre);
+        return String.format("Книга id=%d, наименование=\"%s\", авторы=\"%s\", жанр=\"%s\"", bookId, bookName, authors, genre);
     }
-
 }

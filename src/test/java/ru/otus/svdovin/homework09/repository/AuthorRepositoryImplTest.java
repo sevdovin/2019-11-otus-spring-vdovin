@@ -38,10 +38,9 @@ class AuthorRepositoryImplTest {
     @Test
     void shouldInsertAuthor() {
         val author = new Author(0, AUTHOR_NEW_NAME);
-        authorRepository.insert(author);
-        assertThat(author.getAuthorId()).isGreaterThan(0);
-        val actualAuthor = em.find(Author.class, author.getAuthorId());
-        assertThat(actualAuthor).isNotNull().isEqualToComparingFieldByField(author);
+        long newId = authorRepository.insert(author);
+        val actual = em.find(Author.class, newId);
+        assertThat(actual).isNotNull().isEqualToComparingFieldByField(author);
     }
 
     @DisplayName("изменять наименование автора")
@@ -49,24 +48,21 @@ class AuthorRepositoryImplTest {
     void shouldUpdateAuthorName() {
         Author author1 = em.find(Author.class, AUTHOR_ID_EXIST);
         String oldName = author1.getAuthorName();
+        em.detach(author1);
         author1.setAuthorName(AUTHOR_NEW_NAME);
         Author author2 = authorRepository.update(author1);
-        assertAll("Автор изменился",
-                () -> assertThat(author2).isNotNull(),
-                () -> assertThat(author2).isEqualToComparingFieldByField(author1),
-                () -> assertThat(author2.getAuthorName()).isNotEqualTo(oldName)
-        );
+        assertThat(author2.getAuthorName()).isNotEqualTo(oldName).isEqualTo(AUTHOR_NEW_NAME);
     }
 
     @DisplayName("удалять автора")
     @Test
     void shouldDeleteAuthor() {
-        Author author1 = em.find(Author.class, AUTHOR_ID_EXIST);
+        val author1 = em.find(Author.class, AUTHOR_ID_EXIST);
+        assertThat(author1).isNotNull();
+        em.detach(author1);
         authorRepository.deleteById(AUTHOR_ID_EXIST);
-        assertAll("Автор удален",
-                () -> assertThat(author1).isNotNull(),
-                () -> assertThat(em.find(Author.class, AUTHOR_ID_EXIST)).isNull()
-        );
+        val author2 = em.find(Author.class, AUTHOR_ID_EXIST);
+        assertThat(author2).isNull();
     }
 
     @DisplayName("возвращать автора по его id")

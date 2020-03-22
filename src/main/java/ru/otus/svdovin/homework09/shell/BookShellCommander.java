@@ -6,11 +6,11 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.svdovin.homework09.domain.Author;
 import ru.otus.svdovin.homework09.domain.Book;
-import ru.otus.svdovin.homework09.domain.Comment;
 import ru.otus.svdovin.homework09.domain.Genre;
 import ru.otus.svdovin.homework09.service.*;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 @ShellComponent
@@ -52,8 +52,9 @@ public class BookShellCommander {
             messageService.printMessageByKey(MSG_KEY_BOOK_NAME_IS_EXISTS);
         } else {
             Author author = authorProvider.getAuthorById(authorid).orElse(null);
+            List<Author> listAuthor = Collections.singletonList(author);
             Genre genre = genreProvider.getGenreById(genreid).orElse(null);
-            long newId = bookProvider.createBook(new Book(0, bookname, author, genre));
+            long newId = bookProvider.createBook(new Book(0, bookname, genre, listAuthor));
             messageService.printMessageByKey(MSG_KEY_BOOK_CREATED, newId);
         }
     }
@@ -107,15 +108,23 @@ public class BookShellCommander {
         messageService.printMessageByKey(MSG_KEY_BOOKS_PRINT, books);
     }
 
-    @ShellMethod(value = "Get comments by book id", key = {"bgci"})
-    public void getCommentsByBookId(@ShellOption long bookid) {
-        if (!bookProvider.existsById(bookid)) {
-            messageService.printMessageByKey(MSG_KEY_BOOK_ID_NOT_EXISTS);
-        } else if (!commentProvider.existsCommentByBookId(bookid)) {
-            messageService.printMessageByKey(MSG_KEY_COMMENT_FOR_BOOK_ID_NOT_EXISTS);
+    @ShellMethod(value = "Get books by author id", key = {"bgai"})
+    public void getBooksByAuthorId(@ShellOption long authorid) {
+        if (!authorProvider.getAuthorById(authorid).isPresent()) {
+            messageService.printMessageByKey(MSG_KEY_AUTHOR_ID_NOT_EXISTS);
         } else {
-            List<Comment> comments = bookProvider.getCommentsByBookId(bookid);
-            messageService.printMessageByKey(MSG_KEY_COMMENTS_PRINT, comments);
+            List<Book> bookList = bookProvider.getBookByAuthorId(authorid);
+            messageService.printMessageByKey(MSG_KEY_BOOK_PRINT, bookList);
+        }
+    }
+
+    @ShellMethod(value = "Get books by genre id", key = {"bggi"})
+    public void getBooksByGenreId(@ShellOption long genreid) {
+        if (!genreProvider.getGenreById(genreid).isPresent()) {
+            messageService.printMessageByKey(MSG_KEY_GENRE_ID_NOT_EXISTS);
+        } else {
+            List<Book> bookList = bookProvider.getBookByGenreId(genreid);
+            messageService.printMessageByKey(MSG_KEY_BOOK_PRINT, bookList);
         }
     }
 

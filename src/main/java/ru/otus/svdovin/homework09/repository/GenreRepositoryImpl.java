@@ -4,8 +4,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.svdovin.homework09.domain.Genre;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,41 +29,57 @@ public class GenreRepositoryImpl implements GenreRepository {
 
     @Override
     public void deleteById(long id) {
-        Genre genre = em.find(Genre.class, id);
-        em.remove(genre);
+        Query query = em.createQuery("delete from Genre g " +
+                "where g.genreId = :id")
+                .setParameter("id", id);
+        query.executeUpdate();
     }
 
     @Override
     public Optional<Genre> getById(long id) {
-        Genre genre = em.find(Genre.class, id);
-        return Optional.ofNullable(genre);
+        TypedQuery<Genre> query = em.createQuery("select g from Genre g " +
+                "where g.genreId = :id", Genre.class)
+                .setParameter("id", id);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<Genre> getByName(String name) {
-        return em.createQuery("select g from Genre g where g.genreName = :name", Genre.class)
-                .setParameter("name", name).getResultList();
+        return em.createQuery("select g from Genre g " +
+                "where g.genreName = :name", Genre.class)
+                .setParameter("name", name)
+                .getResultList();
     }
 
     @Override
     public List<Genre> getAll() {
-        return em.createQuery("select g from Genre g", Genre.class).getResultList();
+        return em.createQuery("select g from Genre g", Genre.class)
+                .getResultList();
     }
 
     @Override
     public long count() {
-        return em.createQuery("select count(g) from Genre g", Long.class).getSingleResult();
+        return em.createQuery("select count(g) from Genre g", Long.class)
+                .getSingleResult();
     }
 
     @Override
     public boolean existsById(long id) {
-        return em.createQuery("select count(g) > 0 from Genre g where g.id = :id", Boolean.class)
-                .setParameter("id", id).getSingleResult();
+        return em.createQuery("select count(g) > 0 from Genre g " +
+                "where g.id = :id", Boolean.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Override
     public boolean existsByName(String name) {
-        return em.createQuery("select count(g) > 0 from Genre g where g.genreName = :name", Boolean.class)
-                .setParameter("name", name).getSingleResult();
+        return em.createQuery("select count(g) > 0 from Genre g " +
+                "where g.genreName = :name", Boolean.class)
+                .setParameter("name", name)
+                .getSingleResult();
     }
 }
