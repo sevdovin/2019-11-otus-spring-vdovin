@@ -41,11 +41,7 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        Query query = em.createQuery("delete from Comment c " +
-                "where c.book.bookId = :id")
-                .setParameter("id", id);
-        query.executeUpdate();
-        query = em.createQuery("delete from Book b " +
+        Query query = em.createQuery("delete from Book b " +
                 "where b.bookId = :id")
                 .setParameter("id", id);
         query.executeUpdate();
@@ -53,8 +49,8 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Optional<Book> getById(long id) {
-        TypedQuery<Book> query = em.createQuery("select b from Book b join fetch b.authors " +
-                        "where b.bookId = :id", Book.class)
+        TypedQuery<Book> query = em.createQuery("select b from Book b join fetch b.authors join fetch b.genre " +
+                "where b.bookId = :id", Book.class)
                 .setParameter("id", id);
         try {
             return Optional.of(query.getSingleResult());
@@ -91,8 +87,12 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public List<Book> getAll() {
-        return em.createQuery("select b from Book b join fetch b.authors join fetch b.genre", Book.class)
+        List<Book> books = em.createQuery("select b from Book b join fetch b.genre", Book.class)
                 .getResultList();
+        if (!books.isEmpty()) {
+            books.get(0).getAuthors().isEmpty();
+        }
+        return books;
     }
 
     @Override
