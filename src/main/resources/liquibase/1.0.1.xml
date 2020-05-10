@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+    <changeSet id="1.0.1.01-create-company-sequence" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="company_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="company_id_seq" incrementBy="1" startValue="1000"/>
+        <comment>Creation of company_id_seq sequence</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.02-create-company" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="company"/>
+            </not>
+        </preConditions>
+        <createTable tableName="company">
+            <column name="id" type="NUMERIC(19, 0)" defaultValueSequenceNext="company_id_seq" remarks="Идентификатор записи">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="name" type="VARCHAR(255)" remarks="Наименование">
+                <constraints nullable="false" />
+            </column>
+            <column name="inn" type="VARCHAR(12)" remarks="ИНН">
+                <constraints nullable="true" />
+            </column>
+            <column name="kpp" type="VARCHAR(9)" remarks="КПП">
+                <constraints nullable="true" />
+            </column>
+            <column name="pfr" type="VARCHAR(14)" remarks="Регистрационный номер в ПФР">
+                <constraints nullable="true" />
+            </column>
+            <column name="position" type="VARCHAR(100)" remarks="Наименование должности руководителя">
+                <constraints nullable="true" />
+            </column>
+            <column name="fio" type="VARCHAR(100)" remarks="ФИО руководителя (расшифровка подписи)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <comment>Creation of company table</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.03-create-employee-sequence" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="employee_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="employee_id_seq" incrementBy="1" startValue="1000"/>
+        <comment>Creation of employee_id_seq sequence</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.04-create-employee" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="employee"/>
+            </not>
+        </preConditions>
+        <createTable tableName="employee">
+            <column name="id" type="NUMERIC(19, 0)" defaultValueSequenceNext="employee_id_seq" remarks="Идентификатор записи">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="companyid" type="NUMERIC(19, 0)" remarks="Идентификатор предприятия">
+                <constraints nullable="false" />
+            </column>
+            <column name="lastname" type="VARCHAR(100)" remarks="Фамилия">
+                <constraints nullable="false" />
+            </column>
+            <column name="firstname" type="VARCHAR(100)" remarks="Имя">
+                <constraints nullable="false" />
+            </column>
+            <column name="middlename" type="VARCHAR(100)" remarks="Отчество">
+                <constraints nullable="true" />
+            </column>
+            <column name="birthday" type="DATE" remarks="Дата рождения">
+                <constraints nullable="true" />
+            </column>
+            <column name="snils" type="VARCHAR(14)" remarks="СНИЛС">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <comment>Creation of employee table</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.05-create-employee-index01" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="employee" indexName="k01_employee"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="employee" indexName="k01_employee" unique="false">
+            <column name="lastname"/>
+            <column name="firstname"/>
+            <column name="middlename"/>
+        </createIndex>
+        <comment>Creation of employee index</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.06-create-recordtype-sequence" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="recordtype_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="recordtype_id_seq" incrementBy="1" startValue="1000"/>
+        <comment>Creation of recordtype_id_seq sequence</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.07-create-recordtype" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="recordtype"/>
+            </not>
+        </preConditions>
+        <createTable tableName="recordtype">
+            <column name="id" type="NUMERIC(19, 0)" defaultValueSequenceNext="recordtype_id_seq" remarks="Идентификатор записи">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="typecode" type="NUMERIC(1, 0)" remarks="Код типа">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="VARCHAR(100)" remarks="Наименование типа">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <comment>Creation of recordtype table</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.08-create-recordtype-index01" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="recordtype" indexName="k01_recordtype"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="recordtype" indexName="k01_recordtype" unique="true">
+            <column name="typecode"/>
+        </createIndex>
+        <comment>Creation of recordtype index</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.09-create-record-sequence" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="record_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="record_id_seq" incrementBy="1" startValue="1000"/>
+        <comment>Creation of record_id_seq sequence</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.10-create-record" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="record"/>
+            </not>
+        </preConditions>
+        <createTable tableName="record">
+            <column name="id" type="NUMERIC(19, 0)" defaultValueSequenceNext="record_id_seq" remarks="Идентификатор записи">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="employeeid" type="NUMERIC(19, 0)" remarks="Ссылка на Сотрудника">
+                <constraints nullable="false" />
+            </column>
+            <column name="date" type="DATE" remarks="Дата (число, месяц, год) приема, перевода, увольнения">
+                <constraints nullable="false" />
+            </column>
+            <column name="typecodeid" type="NUMERIC(19, 0)" remarks="Прием, перевод, увольнение (ссылка на таблицу recordtype)">
+                <constraints nullable="true" />
+            </column>
+            <column name="position" type="VARCHAR(255)" remarks="Трудовая функция, структурное подразделение">
+                <constraints nullable="true" />
+            </column>
+            <column name="code" type="VARCHAR(255)" remarks="Код выполняемой функции (при наличии)">
+                <constraints nullable="true" />
+            </column>
+            <column name="reason" type="VARCHAR(255)" remarks="Причины увольнения">
+                <constraints nullable="true" />
+            </column>
+            <column name="docname" type="VARCHAR(255)" remarks="Основание: наименование документа">
+                <constraints nullable="true" />
+            </column>
+            <column name="docdate" type="DATE" remarks="Основание: дата документа">
+                <constraints nullable="true" />
+            </column>
+            <column name="docnumber" type="VARCHAR(255)" remarks="Основание: номер документа">
+                <constraints nullable="true" />
+            </column>
+            <column name="cancel" type="VARCHAR(255)" remarks="Признак отмены записи">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <comment>Creation of record table</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.11-create-auth_role-sequence" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="auth_role_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="auth_role_id_seq" incrementBy="1" startValue="1000"/>
+        <comment>Creation of auth_role_id_seq sequence</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.12-create-auth_role" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="auth_role"/>
+            </not>
+        </preConditions>
+        <createTable tableName="auth_role">
+            <column name="id" type="NUMERIC(19, 0)" defaultValueSequenceNext="auth_role_id_seq" remarks="Идентификатор записи">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="sysname" type="VARCHAR(16)" remarks="Системное наименование роли">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="VARCHAR(50)" remarks="Наименование роли">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <comment>Creation of auth_role table</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.13-create-auth_role-index01" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="auth_role" indexName="k01_auth_role"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="auth_role" indexName="k01_auth_role" unique="true">
+            <column name="sysname"/>
+        </createIndex>
+        <comment>Creation of auth_role index</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.14-create-auth_user-sequence" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="auth_user_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="auth_user_id_seq" incrementBy="1" startValue="1000"/>
+        <comment>Creation of auth_user_id_seq sequence</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.15-create-auth_user" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="auth_user"/>
+            </not>
+        </preConditions>
+        <createTable tableName="auth_user">
+            <column name="id" type="NUMERIC(19, 0)" defaultValueSequenceNext="auth_user_id_seq" remarks="Идентификатор записи">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="roleid" type="NUMERIC(19, 0)" remarks="Идентификатор роли">
+                <constraints nullable="false" />
+            </column>
+            <column name="employeeid" type="NUMERIC(19, 0)" remarks="Идентификатор сотрудника (для роли Сотрудник)">
+                <constraints nullable="true" />
+            </column>
+            <column name="login" type="VARCHAR(255)" remarks="Логин для входа">
+                <constraints nullable="false" />
+            </column>
+            <column name="password" type="VARCHAR(255)" remarks="Хэш пароля">
+                <constraints nullable="false" />
+            </column>
+            <column name="isenabled" type="BOOLEAN" remarks="Статус - активен/блокирован">
+                <constraints nullable="true" />
+            </column>
+            <column name="email" type="VARCHAR(255)" remarks="Адрес электронной почты">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <comment>Creation of auth_user table</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.16-create-auth_user-index01" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="auth_user" indexName="k01_auth_user"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="auth_user" indexName="k01_auth_user" unique="true">
+            <column name="login"/>
+        </createIndex>
+        <comment>Creation of auth_user index</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.17-create-employee-company-fk-postgresql" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="postgresql"/>
+                <sqlCheck expectedResult="0">select count(1) from information_schema.table_constraints where upper(table_name) = upper('employee')
+                    and constraint_name = 'employee_company_fk';
+                </sqlCheck>
+                <tableExists tableName="employee"/>
+                <tableExists tableName="company"/>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE employee
+            ADD CONSTRAINT employee_company_fk
+            FOREIGN KEY (companyid) REFERENCES company (id) ON DELETE CASCADE
+        </sql>
+        <comment>Creation of employee-company foreign key</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.18-create-employee-company-fk-other" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <not>
+                    <dbms type="postgresql"/>
+                </not>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="employee_company_fk" />
+                </not>
+                <tableExists tableName="employee"/>
+                <tableExists tableName="company"/>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE employee
+            ADD CONSTRAINT employee_company_fk
+            FOREIGN KEY (companyid) REFERENCES company (id) ON DELETE CASCADE
+        </sql>
+        <comment>Creation of employee-company foreign key</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.19-create-record-employee-fk-postgresql" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="postgresql"/>
+                <sqlCheck expectedResult="0">select count(1) from information_schema.table_constraints where upper(table_name) = upper('record')
+                    and constraint_name = 'record_employee_fk';
+                </sqlCheck>
+                <tableExists tableName="record"/>
+                <tableExists tableName="employee"/>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE record
+            ADD CONSTRAINT record_employee_fk
+            FOREIGN KEY (employeeid) REFERENCES employee (id) ON DELETE CASCADE
+        </sql>
+        <comment>Creation of record-employee foreign key</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.20-create-record-employee-fk-other" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <not>
+                    <dbms type="postgresql"/>
+                </not>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="record_employee_fk" />
+                </not>
+                <tableExists tableName="record"/>
+                <tableExists tableName="employee"/>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE record
+            ADD CONSTRAINT record_employee_fk
+            FOREIGN KEY (employeeid) REFERENCES employee (id) ON DELETE CASCADE
+        </sql>
+        <comment>Creation of record-employee foreign key</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.21-create-record-recordtype-fk-postgresql" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="postgresql"/>
+                <sqlCheck expectedResult="0">select count(1) from information_schema.table_constraints where upper(table_name) = upper('record')
+                    and constraint_name = 'record_recordtype_fk';
+                </sqlCheck>
+                <tableExists tableName="record"/>
+                <tableExists tableName="recordtype"/>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE record
+            ADD CONSTRAINT record_recordtype_fk
+            FOREIGN KEY (typecodeid) REFERENCES recordtype (id) ON DELETE CASCADE
+        </sql>
+        <comment>Creation of record-recordtype foreign key</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.22-create-record-recordtype-fk-other" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <not>
+                    <dbms type="postgresql"/>
+                </not>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="record_recordtype_fk" />
+                </not>
+                <tableExists tableName="record"/>
+                <tableExists tableName="recordtype"/>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE record
+            ADD CONSTRAINT record_recordtype_fk
+            FOREIGN KEY (typecodeid) REFERENCES recordtype (id) ON DELETE CASCADE
+        </sql>
+        <comment>Creation of record-recordtype foreign key</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.23-create-auth_user-auth_role-fk-postgresql" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <dbms type="postgresql"/>
+                <sqlCheck expectedResult="0">select count(1) from information_schema.table_constraints where upper(table_name) = upper('auth_user')
+                    and constraint_name = 'auth_user_auth_role_fk';
+                </sqlCheck>
+                <tableExists tableName="auth_user"/>
+                <tableExists tableName="auth_role"/>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE auth_user
+            ADD CONSTRAINT auth_user_auth_role_fk
+            FOREIGN KEY (roleid) REFERENCES auth_role (id) ON DELETE CASCADE
+        </sql>
+        <comment>Creation of auth_user-auth_role foreign key</comment>
+    </changeSet>
+    
+    <changeSet id="1.0.1.24-create-auth_user-auth_role-fk-other" author="svdovin" context="update" runInTransaction="false">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <not>
+                    <dbms type="postgresql"/>
+                </not>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="auth_user_auth_role_fk" />
+                </not>
+                <tableExists tableName="auth_user"/>
+                <tableExists tableName="auth_role"/>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE auth_user
+            ADD CONSTRAINT auth_user_auth_role_fk
+            FOREIGN KEY (roleid) REFERENCES auth_role (id) ON DELETE CASCADE
+        </sql>
+        <comment>Creation of auth_user-auth_role foreign key</comment>
+    </changeSet>
+
+</databaseChangeLog>

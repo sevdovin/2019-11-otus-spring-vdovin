@@ -1,0 +1,35 @@
+application:
+  locale: ru_RU
+
+server:
+  port: 8080
+  servlet:
+    context-path: ${SERVICE_CONTEXT:/employmenthistory}
+  error:
+    include-stacktrace: always
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/emphistory
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  liquibase:
+    change-log: classpath:liquibase/rootChangeLog.xml
+  jackson:
+    serialization:
+      indent-output: true
+  messages:
+    basename: i18n/bundle
+    encoding: UTF-8

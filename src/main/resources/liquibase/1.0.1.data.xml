@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+    <changeSet id="1.0.1.data-load-company" author="svdovin" context="update" runInTransaction="false">
+        <loadData encoding="UTF-8" file="liquibase/data/company.csv" tableName="company" separator=";">
+            <column name="id" type="NUMERIC"/>
+            <column name="name" type="STRING"/>
+            <column name="inn" type="STRING"/>
+            <column name="kpp" type="STRING"/>
+            <column name="pfr" type="STRING"/>
+            <column name="position" type="STRING"/>
+            <column name="fio" type="STRING"/>
+        </loadData>
+        <comment>Load data into company table</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.data-load-employee" author="svdovin" context="update" runInTransaction="false">
+        <loadData encoding="UTF-8" file="liquibase/data/employee.csv" tableName="employee" separator=";">
+            <column name="id" type="NUMERIC"/>
+            <column name="companyid" type="NUMERIC"/>
+            <column name="lastname" type="STRING"/>
+            <column name="firstname" type="STRING"/>
+            <column name="middlename" type="STRING"/>
+            <column name="birthday" type="DATE"/>
+            <column name="snils" type="STRING"/>
+        </loadData>
+        <comment>Load data into employee table</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.data-load-recordtype" author="svdovin" context="update" runInTransaction="false">
+        <loadData encoding="UTF-8" file="liquibase/data/recordtype.csv" tableName="recordtype" separator=";">
+            <column name="id" type="NUMERIC"/>
+            <column name="typecode" type="NUMERIC"/>
+            <column name="name" type="STRING"/>
+        </loadData>
+        <comment>Load data into recordtype table</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.data-load-record" author="svdovin" context="update" runInTransaction="false">
+        <loadData encoding="UTF-8" file="liquibase/data/record.csv" tableName="record" separator=";">
+            <column name="id" type="NUMERIC"/>
+            <column name="employeeid" type="NUMERIC"/>
+            <column name="date" type="DATE"/>
+            <column name="typecodeid" type="NUMERIC"/>
+            <column name="position" type="STRING"/>
+            <column name="code" type="STRING"/>
+            <column name="reason" type="STRING"/>
+            <column name="docname" type="STRING"/>
+            <column name="docdate" type="DATE"/>
+            <column name="docnumber" type="STRING"/>
+            <column name="cancel" type="STRING"/>
+        </loadData>
+        <comment>Load data into record table</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.data-load-auth_role" author="svdovin" context="update" runInTransaction="false">
+        <loadData encoding="UTF-8" file="liquibase/data/auth_role.csv" tableName="auth_role" separator=";">
+            <column name="id" type="NUMERIC"/>
+            <column name="sysname" type="STRING"/>
+            <column name="name" type="STRING"/>
+        </loadData>
+        <comment>Load data into auth_role table</comment>
+    </changeSet>
+
+    <changeSet id="1.0.1.data-load-auth_user" author="svdovin" context="update" runInTransaction="false">
+        <loadData encoding="UTF-8" file="liquibase/data/auth_user.csv" tableName="auth_user" separator=";">
+            <column name="id" type="NUMERIC"/>
+            <column name="roleid" type="NUMERIC"/>
+            <column name="employeeid" type="NUMERIC"/>
+            <column name="login" type="STRING"/>
+            <column name="password" type="STRING"/>
+            <column name="isenabled" type="BOOLEAN"/>
+            <column name="email" type="STRING"/>
+        </loadData>
+        <comment>Load data into auth_user table</comment>
+    </changeSet>
+
+</databaseChangeLog>
