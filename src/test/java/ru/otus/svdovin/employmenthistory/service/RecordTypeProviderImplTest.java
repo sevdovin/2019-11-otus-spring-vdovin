@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
-import ru.otus.svdovin.employmenthistory.domain.AuthRole;
 import ru.otus.svdovin.employmenthistory.domain.RecordType;
-import ru.otus.svdovin.employmenthistory.dto.AuthRoleDto;
 import ru.otus.svdovin.employmenthistory.dto.RecordTypeDto;
 import ru.otus.svdovin.employmenthistory.repository.RecordTypeRepository;
 import ru.otus.svdovin.employmenthistory.repository.RecordRepository;
@@ -48,7 +46,7 @@ class RecordTypeProviderImplTest {
     @DisplayName("возвращать тип записи в трудовую книжку по id")
     void shouldReturnExpectedRecordTypeById() {
         val recordType = new RecordType(0, RECORDTYPE_NEW_TYPECODE, RECORDTYPE_NEW_TYPENAME);
-        val recordTypeDto = recordType.buildDTO();
+        val recordTypeDto = RecordTypeDto.buildDTO(recordType);
         Mockito.when(recordTypeRepository.findById(NEW_RECORDTYPE_ID)).thenReturn(Optional.of(recordType));
         RecordTypeDto actual = recordTypeProvider.getRecordType(NEW_RECORDTYPE_ID);
         assertThat(actual).isEqualToComparingFieldByField(recordTypeDto);
@@ -56,16 +54,16 @@ class RecordTypeProviderImplTest {
 
     @Test
     @DisplayName("возвращать все типы записи в трудовую книжку")
-    void shouldReturnAllAuthRoles() {
+    void shouldReturnAllRecordTypes() {
         val recordType = new RecordType(0, RECORDTYPE_NEW_TYPECODE, RECORDTYPE_NEW_TYPENAME);
-        val recordTypeDto = recordType.buildDTO();
+        val recordTypeDto = RecordTypeDto.buildDTO(recordType);
         List<RecordType> list = new ArrayList<>();
         list.add(recordType);
         Mockito.when(recordTypeRepository.findAll(Sort.by(Sort.Direction.ASC, "recordTypeId"))).thenReturn(list);
-        List<RecordTypeDto> listAuthRoles = recordTypeProvider.getRecordTypeAll();
+        List<RecordTypeDto> listRecordTypes = recordTypeProvider.getRecordTypeAll();
         assertAll("Тип записи",
-                () -> assertThat(listAuthRoles.size()).isEqualTo(1),
-                () -> assertThat(listAuthRoles.get(0)).isEqualToComparingFieldByField(recordTypeDto)
+                () -> assertThat(listRecordTypes.size()).isEqualTo(1),
+                () -> assertThat(listRecordTypes.get(0)).isEqualToComparingFieldByField(recordTypeDto)
         );
     }
 
@@ -74,7 +72,7 @@ class RecordTypeProviderImplTest {
     void shouldCeateRecordType() {
         val recordType = new RecordType(NEW_RECORDTYPE_ID, RECORDTYPE_NEW_TYPECODE, RECORDTYPE_NEW_TYPENAME);
         val recordType2 = new RecordType(0, RECORDTYPE_NEW_TYPECODE, RECORDTYPE_NEW_TYPENAME);
-        val recordTypeDto = recordType.buildDTO();
+        val recordTypeDto = RecordTypeDto.buildDTO(recordType);
         Mockito.when(recordTypeRepository.save(recordType2)).thenReturn(recordType);
         long newId = recordTypeProvider.createRecordType(recordTypeDto);
         assertThat(newId).isEqualTo(NEW_RECORDTYPE_ID);
@@ -84,7 +82,7 @@ class RecordTypeProviderImplTest {
     @DisplayName("изменять тип записи в трудовую книжку")
     void shouldUpdateExpectedRecordType() {
         val recordType = new RecordType(NEW_RECORDTYPE_ID, RECORDTYPE_NEW_TYPECODE, RECORDTYPE_NEW_TYPENAME);
-        val recordTypeDto = recordType.buildDTO();
+        val recordTypeDto = RecordTypeDto.buildDTO(recordType);
         Mockito.when(recordTypeRepository.findById(NEW_RECORDTYPE_ID)).thenReturn(Optional.of(recordType));
         recordTypeProvider.updateRecordType(recordTypeDto);
         verify(recordTypeRepository, times(1)).save(recordType);

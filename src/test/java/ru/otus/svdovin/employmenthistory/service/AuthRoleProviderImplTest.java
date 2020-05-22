@@ -47,7 +47,7 @@ class AuthRoleProviderImplTest {
     @DisplayName("возвращать роль пользователей по id")
     void shouldReturnExpectedAuthRoleById() {
         val authRole = new AuthRole(AUTHROLE_ID_EXIST, AUTHROLE_NEW_ROLESYSNAME, AUTHROLE_NEW_ROLENAME);
-        val authRoleDto = authRole.buildDTO();
+        val authRoleDto = AuthRoleDto.buildDTO(authRole);
         Mockito.when(authRoleRepository.findById(NEW_AUTHROLE_ID)).thenReturn(Optional.of(authRole));
         AuthRoleDto actual = authRoleProvider.getAuthRole(NEW_AUTHROLE_ID);
         assertThat(actual).isEqualToComparingFieldByField(authRoleDto);
@@ -57,7 +57,7 @@ class AuthRoleProviderImplTest {
     @DisplayName("возвращать все роли пользователей")
     void shouldReturnAllAuthRoles() {
         val authRole = new AuthRole(AUTHROLE_ID_EXIST, AUTHROLE_NEW_ROLESYSNAME, AUTHROLE_NEW_ROLENAME);
-        val authRoleDto = authRole.buildDTO();
+        val authRoleDto = AuthRoleDto.buildDTO(authRole);
         List<AuthRole> list = new ArrayList<>();
         list.add(authRole);
         Mockito.when(authRoleRepository.findAll(Sort.by(Sort.Direction.ASC, "roleId"))).thenReturn(list);
@@ -69,33 +69,12 @@ class AuthRoleProviderImplTest {
     }
 
     @Test
-    @DisplayName("должен корректно добавлять роль пользователей")
-    void shouldCeateAuthRole() {
-        val authRole = new AuthRole(NEW_AUTHROLE_ID, AUTHROLE_NEW_ROLESYSNAME, AUTHROLE_NEW_ROLENAME);
-        val authRole2 = new AuthRole(0, AUTHROLE_NEW_ROLESYSNAME, AUTHROLE_NEW_ROLENAME);
-        val authRoleDto = authRole.buildDTO();
-        Mockito.when(authRoleRepository.save(authRole2)).thenReturn(authRole);
-        long newId = authRoleProvider.createAuthRole(authRoleDto);
-        assertThat(newId).isEqualTo(NEW_AUTHROLE_ID);
-    }
-
-    @Test
     @DisplayName("изменять роль пользователей")
     void shouldUpdateExpectedAuthRole() {
         val authRole = new AuthRole(NEW_AUTHROLE_ID, AUTHROLE_NEW_ROLESYSNAME, AUTHROLE_NEW_ROLENAME);
-        val authRoleDto = authRole.buildDTO();
+        val authRoleDto = AuthRoleDto.buildDTO(authRole);
         Mockito.when(authRoleRepository.findById(NEW_AUTHROLE_ID)).thenReturn(Optional.of(authRole));
         authRoleProvider.updateAuthRole(authRoleDto);
         verify(authRoleRepository, times(1)).save(authRole);
-    }
-
-    @Test
-    @DisplayName("удалять ожидаемую роль пользователей")
-    void shouldDeleteExpectedAuthRoleById() {
-        val authRole = new AuthRole(NEW_AUTHROLE_ID, AUTHROLE_NEW_ROLESYSNAME, AUTHROLE_NEW_ROLENAME);
-        Mockito.when(authRoleRepository.findById(NEW_AUTHROLE_ID)).thenReturn(Optional.of(authRole));
-        Mockito.when(authUserRepository.existsAuthUserByAuthRoleRoleId(NEW_AUTHROLE_ID)).thenReturn(false);
-        authRoleProvider.deleteAuthRole(NEW_AUTHROLE_ID);
-        verify(authRoleRepository, times(1)).deleteById(NEW_AUTHROLE_ID);
     }
 }

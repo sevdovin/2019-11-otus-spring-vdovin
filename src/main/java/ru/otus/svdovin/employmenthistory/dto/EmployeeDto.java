@@ -3,6 +3,7 @@ package ru.otus.svdovin.employmenthistory.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import ru.otus.svdovin.employmenthistory.domain.Employee;
 
 import java.time.LocalDate;
 
@@ -34,4 +35,19 @@ public class EmployeeDto {
 
     @ApiModelProperty(notes = "СНИЛС", example = "078-123-765 26")
     private String snils;
+
+    public static EmployeeDto buildDTO(Employee employee) {
+        EmployeeDto result = EmployeeDto.builder()
+                .employeeId(employee.getEmployeeId())
+                .lastName(employee.getLastName())
+                .firstName(employee.getFirstName())
+                .middleName(employee.getMiddleName())
+                .birthday(employee.getBirthday())
+                .snils(employee.getSnils())
+                .build();
+        if (employee.getCompany() != null) {
+            result.setCompanyId(employee.getCompany().getCompanyId());
+        }
+        return result;
+    }
 }

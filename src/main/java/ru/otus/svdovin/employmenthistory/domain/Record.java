@@ -3,7 +3,6 @@ package ru.otus.svdovin.employmenthistory.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.otus.svdovin.employmenthistory.dto.RecordDto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "record")
+@NamedEntityGraph(name = "Record.recordType.employee", attributeNodes = {@NamedAttributeNode("recordType"), @NamedAttributeNode("employee")})
 public class Record {
 
     @Id
@@ -69,26 +69,5 @@ public class Record {
         return String.format("Запись книжки id=%d, дата=%s, трудовая функция=\"%s\", код функции=\"%s\", причины увольнения==\"%s\"" +
                " , основание: наименование документа=\"%s\", основание: дата документа=%s, основание: номер документа=\"%s\", признак отмены записи=\"%s\"",
                recordId, date, position, code, reason, docName, docDate, docNumber, cancel);
-    }
-
-    public RecordDto buildDTO() {
-        RecordDto result = RecordDto.builder()
-                .recordId(recordId)
-                .date(date)
-                .position(position)
-                .code(code)
-                .reason(reason)
-                .docName(docName)
-                .docDate(docDate)
-                .docNumber(docNumber)
-                .cancel(cancel)
-                .build();
-        if (employee != null) {
-            result.setEmployeeId(employee.getEmployeeId());
-        }
-        if (recordType != null) {
-            result.setTypeCodeId(recordType.getRecordTypeId());
-        }
-        return result;
     }
 }

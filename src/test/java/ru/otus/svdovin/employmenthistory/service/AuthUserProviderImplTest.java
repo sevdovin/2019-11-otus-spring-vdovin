@@ -25,7 +25,6 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest(classes = {AuthUserProviderImpl.class})
 class AuthUserProviderImplTest {
 
-    private static final Long AUTHUSER_NEW_EMPLOYEEID = 1L;
     private static final String AUTHUSER_NEW_LOGIN = "New Login";
     private static final String AUTHUSER_NEW_PASSWORD = "New Password";
     private static final Boolean AUTHUSER_NEW_ISENABLED = false;
@@ -45,9 +44,9 @@ class AuthUserProviderImplTest {
     @Test
     @DisplayName("возвращать пользователя по id")
     void shouldReturnExpectedAuthUserById() {
-        val authUser = new AuthUser(AUTHUSER_ID_EXIST, AUTHUSER_NEW_EMPLOYEEID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
+        val authUser = new AuthUser(AUTHUSER_ID_EXIST, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
                 AUTHUSER_NEW_ISENABLED, AUTHUSER_NEW_EMAIL);
-        val authUserDto = authUser.buildDTO();
+        val authUserDto = AuthUserDto.buildDTO(authUser);
         Mockito.when(authUserRepository.findById(NEW_AUTHUSER_ID)).thenReturn(Optional.of(authUser));
         AuthUserDto actual = authUserProvider.getAuthUser(NEW_AUTHUSER_ID);
         assertThat(actual).isEqualToComparingFieldByField(authUserDto);
@@ -56,9 +55,9 @@ class AuthUserProviderImplTest {
     @Test
     @DisplayName("возвращать всех пользователей")
     void shouldReturnAllAuthUsers() {
-        val authUser = new AuthUser(AUTHUSER_ID_EXIST, AUTHUSER_NEW_EMPLOYEEID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
+        val authUser = new AuthUser(AUTHUSER_ID_EXIST, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
                 AUTHUSER_NEW_ISENABLED, AUTHUSER_NEW_EMAIL);
-        val authUserDto = authUser.buildDTO();
+        val authUserDto = AuthUserDto.buildDTO(authUser);
         List<AuthUser> list = new ArrayList<>();
         list.add(authUser);
         Mockito.when(authUserRepository.findAll(Sort.by(Sort.Direction.ASC, "userId"))).thenReturn(list);
@@ -72,11 +71,11 @@ class AuthUserProviderImplTest {
     @Test
     @DisplayName("должен корректно добавлять пользователя")
     void shouldCeateAuthUser() {
-        val authUser = new AuthUser(NEW_AUTHUSER_ID, AUTHUSER_NEW_EMPLOYEEID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
+        val authUser = new AuthUser(NEW_AUTHUSER_ID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
                 AUTHUSER_NEW_ISENABLED, AUTHUSER_NEW_EMAIL);
-        val authUser2 = new AuthUser(0, AUTHUSER_NEW_EMPLOYEEID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
+        val authUser2 = new AuthUser(0, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
                 AUTHUSER_NEW_ISENABLED, AUTHUSER_NEW_EMAIL);
-        val authUserDto = authUser.buildDTO();
+        val authUserDto = AuthUserDto.buildDTO(authUser);
         Mockito.when(authUserRepository.save(authUser2)).thenReturn(authUser);
         long newId = authUserProvider.createAuthUser(authUserDto);
         assertThat(newId).isEqualTo(NEW_AUTHUSER_ID);
@@ -85,9 +84,9 @@ class AuthUserProviderImplTest {
     @Test
     @DisplayName("изменять пользователя")
     void shouldUpdateExpectedAuthUser() {
-        val authUser = new AuthUser(NEW_AUTHUSER_ID, AUTHUSER_NEW_EMPLOYEEID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
+        val authUser = new AuthUser(NEW_AUTHUSER_ID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
                 AUTHUSER_NEW_ISENABLED, AUTHUSER_NEW_EMAIL);
-        val authUserDto = authUser.buildDTO();
+        val authUserDto = AuthUserDto.buildDTO(authUser);
         Mockito.when(authUserRepository.findById(NEW_AUTHUSER_ID)).thenReturn(Optional.of(authUser));
         authUserProvider.updateAuthUser(authUserDto);
         verify(authUserRepository, times(1)).save(authUser);
@@ -96,7 +95,7 @@ class AuthUserProviderImplTest {
     @Test
     @DisplayName("удалять ожидаемого пользователя")
     void shouldDeleteExpectedAuthUserById() {
-        val authUser = new AuthUser(NEW_AUTHUSER_ID, AUTHUSER_NEW_EMPLOYEEID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
+        val authUser = new AuthUser(NEW_AUTHUSER_ID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
                 AUTHUSER_NEW_ISENABLED, AUTHUSER_NEW_EMAIL);
         Mockito.when(authUserRepository.findById(NEW_AUTHUSER_ID)).thenReturn(Optional.of(authUser));
         authUserProvider.deleteAuthUser(NEW_AUTHUSER_ID);
@@ -106,7 +105,7 @@ class AuthUserProviderImplTest {
     @Test
     @DisplayName("изменять статус пользователя")
     void shouldUpdateEnabledAuthUser() {
-        val authUser = new AuthUser(NEW_AUTHUSER_ID, AUTHUSER_NEW_EMPLOYEEID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
+        val authUser = new AuthUser(NEW_AUTHUSER_ID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
                 AUTHUSER_NEW_ISENABLED, AUTHUSER_NEW_EMAIL);
         Mockito.when(authUserRepository.findById(NEW_AUTHUSER_ID)).thenReturn(Optional.of(authUser));
         authUserProvider.changeEnabledAuthUser(NEW_AUTHUSER_ID, AUTHUSER_NEW_ISENABLED);

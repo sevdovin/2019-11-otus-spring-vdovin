@@ -16,16 +16,15 @@ import javax.validation.Valid;
 
 import static ru.otus.svdovin.employmenthistory.exception.ExceptionUtils.buildErrorData;
 
-@RestController("CompanyController_v1")
-@RequestMapping("/company/v1")
+@RestController
 @Api(description = "REST API для предприятия", tags = { "Company / Предприятие" })
 public class CompanyController {
     private Logger logger = LogManager.getLogger();
     
     @Autowired
-    CompanyProvider companyProvider;
+    private CompanyProvider companyProvider;
 
-    @GetMapping("/{id}")
+    @GetMapping("/company/{id}")
     @ApiOperation(value = "Получение предприятия по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = CompanyDto.class),
@@ -51,7 +50,7 @@ public class CompanyController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/company")
     @ApiOperation(value = "Изменение атрибутов предприятия", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),

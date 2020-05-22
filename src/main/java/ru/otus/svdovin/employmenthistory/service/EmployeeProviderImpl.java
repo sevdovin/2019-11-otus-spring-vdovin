@@ -1,7 +1,8 @@
 package ru.otus.svdovin.employmenthistory.service;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.svdovin.employmenthistory.domain.Company;
 import ru.otus.svdovin.employmenthistory.domain.Employee;
 import ru.otus.svdovin.employmenthistory.dto.EmployeeDto;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@Repository
+@Service
 public class EmployeeProviderImpl implements EmployeeProvider {
 
     private final EmployeeRepository employeeRepository;
@@ -31,6 +32,7 @@ public class EmployeeProviderImpl implements EmployeeProvider {
         this.messageService = messageService;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public EmployeeDto getEmployee(long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).orElse(null);
@@ -40,17 +42,19 @@ public class EmployeeProviderImpl implements EmployeeProvider {
                     ErrorCode.INVALID_EMPLOYEE_ID.getCode()
             );
         }
-        return employee.buildDTO();
+        return EmployeeDto.buildDTO(employee);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<EmployeeDto> getEmployeeAll() {
         return employeeRepository.findAll(
                 Sort.by(Sort.Direction.ASC, "lastName").and(
                         Sort.by(Sort.Direction.ASC, "firstName")))
-                .stream().map(e -> e.buildDTO()).collect(toList());
+                .stream().map(e -> EmployeeDto.buildDTO(e)).collect(toList());
     }
 
+    @Transactional
     @Override
     public long createEmployee(EmployeeDto employeeDto) {
         Long companyId = employeeDto.getCompanyId();
@@ -78,6 +82,7 @@ public class EmployeeProviderImpl implements EmployeeProvider {
         return employeeRepository.save(employee).getEmployeeId();
     }
 
+    @Transactional
     @Override
     public void updateEmployee(EmployeeDto employeeDto) {
         Employee employee = employeeRepository.findById(employeeDto.getEmployeeId()).orElse(null);
@@ -95,6 +100,7 @@ public class EmployeeProviderImpl implements EmployeeProvider {
         employeeRepository.save(employee);
     }
 
+    @Transactional
     @Override
     public void deleteEmployee(long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).orElse(null);

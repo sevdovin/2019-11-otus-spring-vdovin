@@ -1,5 +1,5 @@
 id;roleid;employeeid;login;password;isenabled;email
 1;1;;admin;$2a$10$8R/UxQ/K/IgX0jeTQQnaqeoes18cRFwa6z4FsKr4daLsav/roPsmm;true;svdovin@diasoft.ru
-2;2;;kadrovik;$2a$10$8R/UxQ/K/IgX0jeTQQnaqeoes18cRFwa6z4FsKr4daLsav/roPsmm;true;
-3;3;1;petrova;$2a$10$8R/UxQ/K/IgX0jeTQQnaqeoes18cRFwa6z4FsKr4daLsav/roPsmm;true;
-4;3;2;ivanov;$2a$10$8R/UxQ/K/IgX0jeTQQnaqeoes18cRFwa6z4FsKr4daLsav/roPsmm;true;
+2;2;;manager;$2a$10$c0yWLiUxpI5Dj8Mz7rt0ZuygBetbe77aksJ0yR53gWljkKXMXowZO;true;
+3;3;1;petrova;$2a$10$Ix9oK7PXhtqPlMIqMT0juuA2XKdIQ/Ltpq0odI1y40enHYko0AdUi;true;
+4;3;2;ivanov;$2a$10$sdZwAU2Bfo044EyEdSmJZeXqw39BE7srB.McXYFdobbgJYXRtBsXu;true;

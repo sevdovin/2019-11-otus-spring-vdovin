@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{empBookDelete.title}">Удаление записи трудовой книжки</title>
+    <style>
+#my_body        { background-color: #fffff5; height: 100%; }
+h1              { text-align: center }
+.center         { text-align: center }
+.btn2           { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; display:inline-block; }
+table           { width: 80%; margin-left: auto; margin-right: auto }
+table tbody     { height: 500px; overflow-y: scroll; display: block; }
+table thead     { display: block; }
+.row            { margin-top: 10px; }
+label           { display: inline-block; width: 150px; }
+input:read-only { background: lightgray; }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body id="my_body">
+
+    <form id="edit-form" action="empBookDelete.html">
+        <div>
+            <h1 th:text="#{empBookDelete.title}">Удаление записи трудовой книжки</h1>
+        </div>
+        
+        <div class="row">
+            <label for="id-input" th:text="#{empBookDelete.id}">Идентификатор:</label>
+            <input id="id-input" type="text" readonly="readonly" value="1"/>
+        </div>
+
+        <div class="row">
+            <label for="date-input" th:text="#{empBookDelete.date}">Дата:</label>
+            <input id="date-input" name="date" type="text" readonly="readonly" value="2020-01-01"/>
+        </div>
+
+        <div class="row">
+            <label for="type-input" th:text="#{empBookDelete.type}">Тип записи:</label>
+            <input id="type-input" name="type" type="text" readonly="readonly" value="Принятие"/>
+        </div>
+
+        <div class="row">
+            <label for="position-input" th:text="#{empBookDelete.position}">Трудовая функция:</label>
+            <input id="position-input" name="position" type="text" readonly="readonly" value="Бухгалтер"/>
+        </div>
+
+        <div class="row">
+            <label for="code-input" th:text="#{empBookDelete.code}">Код выполняемой функции:</label>
+            <input id="code-input" name="code" type="text" readonly="readonly" value="Код"/>
+        </div>
+
+        <div class="row">
+            <label for="reason-input" th:text="#{empBookDelete.reason}">Причина увольнения:</label>
+            <input id="reason-input" name="reason" type="text" readonly="readonly" value="Прогул"/>
+        </div>
+
+        <div class="row">
+            <label for="docname-input" th:text="#{empBookDelete.docname}">Основание: наименование документа:</label>
+            <input id="docname-input" name="docname" type="text" readonly="readonly" value="Приказ"/>
+        </div>
+
+        <div class="row">
+            <label for="docdate-input" th:text="#{empBookDelete.docdate}">Основание: дата документа:</label>
+            <input id="docdate-input" name="docdate" type="text" readonly="readonly" value="2020-02-01"/>
+        </div>
+
+        <div class="row">
+            <label for="docnumber-input" th:text="#{empBookDelete.docnumber}">Основание: номер документа:</label>
+            <input id="docnumber-input" name="docnumber" type="text" readonly="readonly" value="123"/>
+        </div>
+
+        <div class="row">
+            <label for="cancel-input" th:text="#{empBookDelete.cancel}">Признак отмены:</label>
+            <input id="cancel-input" name="cancel" type="text" readonly="readonly" value="Прогул"/>
+        </div>
+        
+        <div class="center">
+            <button id="returnButton" class="btn2" th:text="#{empBookDelete.back}">Назад</button>
+            <button type="submit" class="btn2" th:text="#{empBookDelete.delete}">Удалить</button>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            let url = new URL(window.location.href);
+            let recordId = url.searchParams.get("recordId");
+            $.get('/record/' + recordId).done(function (record) {
+                $("#id-input").val(record.recordId);
+                $("#date-input").val(record.date);
+                $("#type-input").val(record.typeName);
+                $("#position-input").val(record.position);
+                $("#code-input").val(record.code);
+                $("#reason-input").val(record.reason);
+                $("#docname-input").val(record.docName);
+                $("#docdate-input").val(record.docDate);
+                $("#docnumber-input").val(record.docNumber);
+                $("#cancel-input").val(record.cancel);
+            })
+        });
+        $("#edit-form").submit(function(record) {
+            record.preventDefault();
+            let url = new URL(window.location.href);
+            let recordId = url.searchParams.get("recordId");
+            let employeeId = url.searchParams.get("employeeId");
+            $.ajax({
+                url: '/record/' + recordId,
+                type: 'DELETE',
+                success: function(result) {
+                    var url2 = "/empBookView?id=" + employeeId;
+                    $(location).attr('href',url2);
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = xhr.status + ': ' + xhr.responseText;
+                    alert('Error - ' + errorMessage);
+                }
+            });
+        });
+        $("#returnButton").click(function() {
+            event.preventDefault();
+            let url = new URL(window.location.href);
+            let employeeId = url.searchParams.get("employeeId");
+            var url2 = "/empBookView?id=" + employeeId;
+            $(location).attr('href',url2);
+        });
+    </script>
+</body>
+</html>

@@ -3,7 +3,6 @@ package ru.otus.svdovin.employmenthistory.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.otus.svdovin.employmenthistory.dto.CompanyDto;
 
 import javax.persistence.*;
 
@@ -37,17 +36,4 @@ public class Company {
 
     @Column(name = "fio")
     private String chiefFio;
-
-    public CompanyDto buildDTO() {
-        return CompanyDto.builder()
-                .companyId(companyId)
-                .companyName(companyName)
-                .companyInn(companyInn)
-                .companyKpp(companyKpp)
-                .companyPfr(companyPfr)
-                .chiefPosition(chiefPosition)
-                .chiefFio(chiefFio)
-                .build();
-    }
-
 }

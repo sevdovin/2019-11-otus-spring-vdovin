@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{staff.title}">Кадровик</title>
+    <style>
+#my_body { text-align: center; background-color: #fffff5 }
+h1       { text-align: center }
+.btn     { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; width: 20% }
+    </style>
+</head>
+<body id="my_body">
+    <div>
+        <h1 th:text="#{staff.section}">Выберите раздел</h1>
+    </div>
+    <div>
+        <form action="/companyView">
+            <button type="submit" class="btn" th:text="#{staff.company}">Предприятие</button>
+        </form>
+        </br>
+        <form action="/employeeList">
+            <button type="submit" class="btn" th:text="#{staff.employee_list}">Сотрудники</button>
+        </form>
+        </br>
+        <form action="/logout">
+            <button type="submit" class="btn" th:text="#{staff.logout}">Выйти</button>
+        </form>
+    </div>
+</body>
+</html>

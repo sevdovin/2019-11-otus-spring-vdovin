@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.svdovin.employmenthistory.dto.AuthRoleDto;
 import ru.otus.svdovin.employmenthistory.dto.RecordTypeDto;
 import ru.otus.svdovin.employmenthistory.dto.ErrorEntity;
 import ru.otus.svdovin.employmenthistory.exception.APIException;
@@ -17,16 +16,15 @@ import javax.validation.Valid;
 
 import static ru.otus.svdovin.employmenthistory.exception.ExceptionUtils.buildErrorData;
 
-@RestController("RecordTypeController_v1")
-@RequestMapping("/recordtype/v1")
+@RestController
 @Api(description = "REST API для типов записей в трудовую книжку", tags = { "RecordType / Типы записей" })
 public class RecordTypeController {
     private Logger logger = LogManager.getLogger();
     
     @Autowired
-    RecordTypeProvider recordTypeProvider;
+    private RecordTypeProvider recordTypeProvider;
 
-    @GetMapping("/{id}")
+    @GetMapping("/recordtype/{id}")
     @ApiOperation(value = "Получение типа записи по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = RecordTypeDto.class),
@@ -52,7 +50,7 @@ public class RecordTypeController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/recordtype")
     @ApiOperation(value = "Получение всех типов записи в трудовую книжку")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = RecordTypeDto.class, responseContainer = "List"),
@@ -76,7 +74,7 @@ public class RecordTypeController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/recordtype")
     @ApiOperation(value = "Создание нового типа записи в трудовую книжку", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
@@ -104,7 +102,7 @@ public class RecordTypeController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/recordtype")
     @ApiOperation(value = "Изменение типа записи в трудовую книжку", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),
@@ -133,7 +131,7 @@ public class RecordTypeController {
         }
     }
 
-    @DeleteMapping("/{recordTypeId}")
+    @DeleteMapping("/recordtype/{recordTypeId}")
     @ApiOperation(value = "Удаление типа записи в трудовую книжку", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

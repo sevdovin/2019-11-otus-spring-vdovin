@@ -3,7 +3,6 @@ package ru.otus.svdovin.employmenthistory.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.otus.svdovin.employmenthistory.dto.AuthRoleDto;
 
 import javax.persistence.*;
 
@@ -25,12 +24,4 @@ public class AuthRole {
 
     @Column(name = "name")
     private String roleName;
-
-    public AuthRoleDto buildDTO() {
-        return AuthRoleDto.builder()
-                .roleId(roleId)
-                .roleSysName(roleSysName)
-                .roleName(roleName)
-                .build();
-    }
 }

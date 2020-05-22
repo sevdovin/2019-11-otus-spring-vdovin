@@ -14,8 +14,8 @@ public enum  ErrorCode {
     RECORDTYPE_USE_IN_RECORD(20),
     INVALID_AUTHROLE_ID(21),
     AUTHROLE_NOT_FOUND(22),
-    AUTHROLE_USE_IN_AUTHUSER(23),
-    AUTHUSER_NOT_FOUND(24);
+    AUTHUSER_NOT_FOUND(24),
+    INVALID_AUTHUSER_ID(25);
 
     private final int code;
 

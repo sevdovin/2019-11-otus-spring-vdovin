@@ -3,8 +3,6 @@ package ru.otus.svdovin.employmenthistory.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.otus.svdovin.employmenthistory.dto.RecordDto;
-import ru.otus.svdovin.employmenthistory.dto.RecordTypeDto;
 
 import javax.persistence.*;
 
@@ -26,12 +24,4 @@ public class RecordType {
 
     @Column(name = "name")
     private String typeName;
-
-    public RecordTypeDto buildDTO() {
-        return RecordTypeDto.builder()
-                .recordTypeId(recordTypeId)
-                .typeCode(typeCode)
-                .typeName(typeName)
-                .build();
-    }
 }

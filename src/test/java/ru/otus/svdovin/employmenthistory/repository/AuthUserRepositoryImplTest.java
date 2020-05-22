@@ -17,8 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 class AuthUserRepositoryImplTest {
 
-
-    private static final Long AUTHUSER_NEW_EMPLOYEEID = 1L;
     private static final String AUTHUSER_NEW_LOGIN = "New Login";
     private static final String AUTHUSER_NEW_PASSWORD = "New Password";
     private static final Boolean AUTHUSER_NEW_ISENABLED = false;
@@ -36,7 +34,7 @@ class AuthUserRepositoryImplTest {
     @DisplayName("добавлять пользователя")
     @Test
     void shouldInsertAuthUser() {
-        val authUser = new AuthUser(0, AUTHUSER_NEW_EMPLOYEEID, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
+        val authUser = new AuthUser(0, AUTHUSER_NEW_LOGIN, AUTHUSER_NEW_PASSWORD,
                 AUTHUSER_NEW_ISENABLED, AUTHUSER_NEW_EMAIL);
         long newId = authUserRepository.save(authUser).getUserId();
         authUser.setUserId(newId);
@@ -76,9 +74,9 @@ class AuthUserRepositoryImplTest {
 
     @DisplayName("возвращать всех пользователей")
     @Test
-    void shouldFindEmployeeAll() {
-        List<AuthUser> employees = authUserRepository.findAll();
-        assertThat(employees).isNotNull().hasSize(AUTHUSER_COUNT_INT);
+    void shouldFindAuthUserAll() {
+        List<AuthUser> authUsers = authUserRepository.findAll();
+        assertThat(authUsers).isNotNull().hasSize(AUTHUSER_COUNT_INT);
     }
 
     @DisplayName("изменять статус пользователя")

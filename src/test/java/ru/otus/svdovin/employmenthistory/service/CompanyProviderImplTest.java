@@ -43,7 +43,7 @@ class CompanyProviderImplTest {
     void shouldReturnExpectedCompanyById() {
         val company = new Company(COMPANY_NEW_ID, COMPANY_NEW_NAME, COMPANY_NEW_INN,
                 COMPANY_NEW_KPP, COMPANY_NEW_PFR, COMPANY_NEW_POSITION, COMPANY_NEW_CHIEF_FIO);
-        val companyDto = company.buildDTO();
+        val companyDto = CompanyDto.buildDTO(company);
         Mockito.when(companyRepository.findById(COMPANY_NEW_ID)).thenReturn(Optional.of(company));
         CompanyDto actual = companyProvider.getCompany(COMPANY_NEW_ID);
         assertThat(actual).isEqualToComparingFieldByField(companyDto);
@@ -54,7 +54,7 @@ class CompanyProviderImplTest {
     void shouldUpdateExpectedCompany() {
         val company = new Company(COMPANY_NEW_ID, COMPANY_NEW_NAME, COMPANY_NEW_INN,
                 COMPANY_NEW_KPP, COMPANY_NEW_PFR, COMPANY_NEW_POSITION, COMPANY_NEW_CHIEF_FIO);
-        val companyDto = company.buildDTO();
+        val companyDto = CompanyDto.buildDTO(company);
         Mockito.when(companyRepository.findById(COMPANY_NEW_ID)).thenReturn(Optional.of(company));
         companyProvider.updateCompany(companyDto);
         verify(companyRepository, times(1)).save(company);

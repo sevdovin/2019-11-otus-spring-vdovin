@@ -3,8 +3,6 @@ package ru.otus.svdovin.employmenthistory.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.otus.svdovin.employmenthistory.dto.AuthUserDto;
-import ru.otus.svdovin.employmenthistory.dto.RecordDto;
 
 import javax.persistence.*;
 
@@ -13,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "auth_user")
+@NamedEntityGraph(name = "AuthUser.authRole.employee", attributeNodes = {@NamedAttributeNode("authRole"), @NamedAttributeNode("employee")})
 public class AuthUser {
 
     @Id
@@ -20,9 +19,6 @@ public class AuthUser {
     @GeneratedValue(generator = "auth_user_id_seq")
     @SequenceGenerator(name = "auth_user_id_seq", sequenceName = "auth_user_id_seq", allocationSize = 1)
     private long userId;
-
-    @Column(name = "employeeid")
-    private Long employeeId;
 
     @Column(name = "login")
     private String login;
@@ -37,12 +33,15 @@ public class AuthUser {
     private String email;
 
     @ManyToOne
+    @JoinColumn(name = "employeeid", referencedColumnName = "id")
+    private Employee employee;
+
+    @ManyToOne
     @JoinColumn(name = "roleid", referencedColumnName = "id")
     private AuthRole authRole;
 
-    public AuthUser(long userId, Long employeeId, String login, String password, Boolean isEnabled, String email) {
+    public AuthUser(long userId, String login, String password, Boolean isEnabled, String email) {
         this.userId = userId;
-        this.employeeId = employeeId;
         this.login = login;
         this.password = password;
         this.isEnabled = isEnabled;
@@ -50,22 +49,7 @@ public class AuthUser {
     }
 
     public String toString() {
-        return String.format("Пользователь id=%d, сотрудник id=%d, логин=\"%s\", действует=%b, email=\"%s\"", 
-               userId, employeeId, login, isEnabled, email);
-    }
-
-    public AuthUserDto buildDTO() {
-        AuthUserDto result = AuthUserDto.builder()
-                .userId(userId)
-                .employeeId(employeeId)
-                .login(login)
-                .password(password)
-                .isEnabled(isEnabled)
-                .email(email)
-                .build();
-        if (authRole != null) {
-            result.setRoleid(authRole.getRoleId());
-        }
-        return result;
+        return String.format("Пользователь id=%d, логин=\"%s\", действует=%b, email=\"%s\"",
+               userId, login, isEnabled, email);
     }
 }

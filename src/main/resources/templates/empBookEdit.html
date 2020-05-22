@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{empBookEdit.title}">Изменение записи трудовой книжки</title>
+    <style type="text/css">
+#my_body        { background-color: #fffff5; height: 100%; }
+h1              { text-align: center }
+.center         { text-align: center }
+.btn2           { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; display:inline-block; }
+table           { width: 80%; margin-left: auto; margin-right: auto }
+table tbody     { height: 500px; overflow-y: scroll; display: block; }
+table thead     { display: block; }
+.row            { margin-top: 10px; }
+label           { display: inline-block; width: 150px; }
+input:read-only { background: lightgray; }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body id="my_body">
+
+    <form id="edit-form" action="empBookEdit.html">
+        <div>
+            <h1 th:text="#{empBookEdit.title}">Изменение записи трудовой книжки</h1>
+        </div>
+        
+        <div class="row">
+            <label for="id-input" th:text="#{empBookEdit.id}">Идентификатор:</label>
+            <input id="id-input" type="text" readonly="readonly" value="1"/>
+        </div>
+        
+        <div class="row">
+            <label for="date-input" th:text="#{empBookEdit.date}">Дата:</label>
+            <input id="date-input" name="date" type="text" value="2020-01-01"/>
+        </div>
+
+        <div class="row">
+            <label for="type-input" th:text="#{empBookEdit.type}">Тип записи:</label>
+            <select id = "type-input" name="type">
+            </select>
+        </div>
+
+        <div class="row">
+            <label for="position-input" th:text="#{empBookEdit.position}">Трудовая функция:</label>
+            <input id="position-input" name="position" type="text" value="Бухгалтер"/>
+        </div>
+
+        <div class="row">
+            <label for="code-input" th:text="#{empBookEdit.code}">Код выполняемой функции:</label>
+            <input id="code-input" name="code" type="text" value="Код"/>
+        </div>
+
+        <div class="row">
+            <label for="reason-input" th:text="#{empBookEdit.reason}">Причина увольнения:</label>
+            <input id="reason-input" name="reason" type="text" value="Прогул"/>
+        </div>
+
+        <div class="row">
+            <label for="docname-input" th:text="#{empBookEdit.docname}">Основание: наименование документа:</label>
+            <input id="docname-input" name="docname" type="text" value="Приказ"/>
+        </div>
+
+        <div class="row">
+            <label for="docdate-input" th:text="#{empBookEdit.docdate}">Основание: дата документа:</label>
+            <input id="docdate-input" name="docdate" type="text" value="2020-02-01"/>
+        </div>
+
+        <div class="row">
+            <label for="docnumber-input" th:text="#{empBookEdit.docnumber}">Основание: номер документа:</label>
+            <input id="docnumber-input" name="docnumber" type="text" value="123"/>
+        </div>
+
+        <div class="row">
+            <label for="cancel-input" th:text="#{empBookEdit.cancel}">Признак отмены:</label>
+            <input id="cancel-input" name="cancel" type="text" value="Прогул"/>
+        </div>
+
+        <div class="center">
+            <button id="returnButton" type="button" class="btn2" th:text="#{empBookEdit.back}">Назад</button>
+            <button type="submit" class="btn2" th:text="#{empBookEdit.save}">Сохранить</button>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            let url = new URL(window.location.href);
+            let typeId = url.searchParams.get("typeId");
+            $.get('/recordtype').done(function (recordtypes) {
+                var $typeInput = $("#type-input");
+                recordtypes.forEach(function (recordtype) {
+                    $typeInput.append($("<option />").val(recordtype.recordTypeId).text(recordtype.typeName));
+                });
+                $typeInput.val(typeId);
+            })
+        });
+        $(function () {
+            let url = new URL(window.location.href);
+            let recordId = url.searchParams.get("recordId");
+            $.get('/record/' + recordId).done(function (record) {
+                $("#id-input").val(record.recordId);
+                $("#date-input").val(record.date);
+                $("#position-input").val(record.position);
+                $("#code-input").val(record.code);
+                $("#reason-input").val(record.reason);
+                $("#docname-input").val(record.docName);
+                $("#docdate-input").val(record.docDate);
+                $("#docnumber-input").val(record.docNumber);
+                $("#cancel-input").val(record.cancel);
+            })
+        });
+        $("#edit-form").submit(function(record) {
+            record.preventDefault();
+            let url = new URL(window.location.href);
+            let recordId = url.searchParams.get("recordId");
+            let employeeId = url.searchParams.get("employeeId");
+            var data = {}
+            data["recordId"] = recordId;
+            data["date"] = $("#date-input").val();
+            data["position"] = $("#position-input").val();
+            data["code"] = $("#code-input").val();
+            data["reason"] = $("#reason-input").val();
+            data["docName"] = $("#docname-input").val();
+            data["docDate"] = $("#docdate-input").val();
+            data["docNumber"] = $("#docnumber-input").val();
+            data["cancel"] = $("#cancel-input").val();
+            data["typeCodeId"] = $("#type-input option:selected").val();
+            $.ajax({
+                url: '/record',
+                type: 'PUT',
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                dataType: 'json',
+                "error": function (xhr, status, error) {
+                    if(xhr.status=200) {
+                        var url2 = "/empBookView?id=" + employeeId;
+                        $(location).attr('href',url2);
+
+                    } else {
+                        var errorMessage = xhr.status + ': ' + xhr.responseText;
+                        alert('Error - ' + errorMessage);
+                    }
+                }
+            });
+        });
+        $("#returnButton").click(function() {
+            event.preventDefault();
+            let url = new URL(window.location.href);
+            let employeeId = url.searchParams.get("employeeId");
+            var url2 = "/empBookView?id=" + employeeId;
+            $(location).attr('href',url2);
+        });
+    </script>
+
+</body>
+</html>

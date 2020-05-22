@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{empBookView.title}">Трудовая книжка</title>
+    <style>
+#my_body     { background-color: #fffff5; height: 100% }
+h1           { text-align: center }
+.date        { width: 100px; text-align: left }
+.typename    { width: 150px; text-align: left }
+.position    { width: 300px; text-align: left }
+.code        { width: 200px; text-align: left }
+.reason      { width: 200px; text-align: left }
+.cancel      { width: 100px; text-align: left }
+.center      { text-align: center }
+.btn2        { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; }
+table        { width: 90%; margin-left: auto; margin-right: auto; margin-top: 10px }
+table tbody  { height: 500px; overflow-y: scroll; display: block; }
+table thead  { display: block; }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body id="my_body">
+    <div>
+        <h1 th:text="#{empBookView.title}">Трудовая книжка</h1>
+        <div class="center">
+            <label for="lastname-input" style="display:inline-block;" th:text="#{empBookView.lastname}">Фамилия:</label>
+            <input id="lastname-input" style="display:inline-block;" name="lastname" type="text" readonly="readonly" value="Иванов"/>
+            <label for="firstname-input" style="display:inline-block;" th:text="#{empBookView.firstname}">Имя:</label>
+            <input id="firstname-input" style="display:inline-block;" name="firstname" type="text" readonly="readonly" value="Иван"/>
+            <label for="middlename-input" style="display:inline-block;" th:text="#{empBookView.middlename}">Отчество:</label>
+            <input id="middlename-input" style="display:inline-block;" name="middlename" type="text" readonly="readonly" value="Иванович"/>
+        </div>
+    </div>
+    <div>
+        <div>
+            <table class="records" border="1">
+                <thead>
+                    <tr>
+                        <th class="date" th:text="#{empBookView.date}">Дата</th>
+                        <th class="typename" th:text="#{empBookView.typename}">Тип записи</th>
+                        <th class="position" th:text="#{empBookView.position}">Трудовая функция</th>
+                        <th class="code" th:text="#{empBookView.code}">Код выполняемой функции</th>
+                        <th class="reason" th:text="#{empBookView.reason}">Причина увольнения</th>
+                        <th class="cancel" th:text="#{empBookView.cancel}">Отмена</th>
+                    </tr>
+                </thead>
+                <tbody id="recordsTableBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="center">
+            <form style="display:inline-block;">
+                <button id="returnButton" type="button" class="btn2" th:text="#{employeeList.back}">Назад</button>
+            </form>
+            <form style="display:inline-block;">
+                <button id="recordAdd" type="button" class="btn2" th:text="#{empBookView.recordAdd}">Добавить запись</button>
+            </form>
+        </div>
+    </div>
+    <script>
+    $(function () {
+        let url = new URL(window.location.href);
+        let id = url.searchParams.get("id");
+        $.get('/employee/' + id).done(function (employee) {
+            $("#lastname-input").val(employee.lastName);
+            $("#firstname-input").val(employee.firstName);
+            $("#middlename-input").val(employee.middleName);
+        })
+        $.get('/record/employee/' + id).done(function (records) {
+            records.forEach(function (record) {
+                $('tbody').append(`
+                    <tr>
+                        <td class="date">${record.date}</td>
+                        <td class="typename">${record.typeName}</td>
+                        <td class="position">${record.position}</td>
+                        <td class="code">${record.code}</td>
+                        <td class="reason">${record.reason}</td>
+                        <td class="cancel">${record.cancel}</td>
+                        <td><a href="/empBookEdit?recordId=${record.recordId}&typeId=${record.typeCodeId}&employeeId=${record.employeeId}">Изменить</a></td>
+                        <td><a href="/empBookDelete?recordId=${record.recordId}&employeeId=${record.employeeId}">Удалить</a></td>
+                    </tr>
+                `)
+            });
+        })
+    });
+    $("#returnButton").click(function() {
+        var url = "/employeeList";
+        $(location).attr('href',url);
+    });
+    $("#recordAdd").click(function() {
+        let url = new URL(window.location.href);
+        let id = url.searchParams.get("id");
+        var url2 = "/empBookAdd?employeeId=" + id;
+        $(location).attr('href',url2);
+    });
+    </script>
+</body>
+</html>

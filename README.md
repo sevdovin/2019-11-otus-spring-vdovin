@@ -29,8 +29,16 @@
 - Созданы контроллеры для REST-АПИ
 - Написаны unit-тесты для репозиториев и сервисов
 - В сущностях и REST-АПИ добавлены описания для swagger, дотупно по адресу
-  http://localhost:8080/employmenthistory/swagger-ui.html
+  http://localhost:8080/swagger-ui.html
 - Актуатор доступен по адресу
-  http://localhost:8080/employmenthistory/actuator
+  http://localhost:8080/actuator
 
+Первоначальные пользователи:
+- login: admin, password:admin, role: ADMIN
+- login: manager, password: 1, role: MANAGER
+- login: petrova, password: 1, role: EMPLOYEE
+- login: ivanov, password: 1, role: EMPLOYEE
+
+Добавлен UI для роли MANAGER (для остальных - в плане)
+Доспуп к url регулируется Spring Security по ролям пользователей
 

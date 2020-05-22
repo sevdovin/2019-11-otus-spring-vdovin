@@ -16,16 +16,15 @@ import javax.validation.Valid;
 
 import static ru.otus.svdovin.employmenthistory.exception.ExceptionUtils.buildErrorData;
 
-@RestController("RecordController_v1")
-@RequestMapping("/record/v1")
+@RestController
 @Api(description = "REST API для записей трудовой книжки", tags = { "Record / Записи трудовой книжки" })
 public class RecordController {
     private Logger logger = LogManager.getLogger();
     
     @Autowired
-    RecordProvider recordProvider;
+    private RecordProvider recordProvider;
 
-    @GetMapping("/{id}")
+    @GetMapping("/record/{id}")
     @ApiOperation(value = "Получение записи трудовой книжки по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = RecordDto.class),
@@ -51,7 +50,7 @@ public class RecordController {
         }
     }
 
-    @GetMapping("/{employeeId}")
+    @GetMapping("/record/employee/{id}")
     @ApiOperation(value = "Получение записей трудовой книжки по идентификатору сотрудника")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = RecordDto.class),
@@ -77,7 +76,7 @@ public class RecordController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/record")
     @ApiOperation(value = "Создание записи трудовой книжки", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
@@ -105,7 +104,7 @@ public class RecordController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/record")
     @ApiOperation(value = "Изменение записи трудовой книжки", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),
@@ -134,7 +133,7 @@ public class RecordController {
         }
     }
 
-    @DeleteMapping("/{recordId}")
+    @DeleteMapping("/record/{recordId}")
     @ApiOperation(value = "Удаление записи трудовой книжки", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

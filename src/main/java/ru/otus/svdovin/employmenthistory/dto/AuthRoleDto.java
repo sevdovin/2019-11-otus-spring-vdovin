@@ -3,6 +3,7 @@ package ru.otus.svdovin.employmenthistory.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import ru.otus.svdovin.employmenthistory.domain.AuthRole;
 
 @Getter
 @Setter
@@ -20,4 +21,12 @@ public class AuthRoleDto {
 
     @ApiModelProperty(notes = "Наименование роли", example = "Администратор")
     private String roleName;
+
+    public static AuthRoleDto buildDTO(AuthRole authRole) {
+        return AuthRoleDto.builder()
+                .roleId(authRole.getRoleId())
+                .roleSysName(authRole.getRoleSysName())
+                .roleName(authRole.getRoleName())
+                .build();
+    }
 }

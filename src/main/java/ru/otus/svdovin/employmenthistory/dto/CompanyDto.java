@@ -3,6 +3,7 @@ package ru.otus.svdovin.employmenthistory.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import ru.otus.svdovin.employmenthistory.domain.Company;
 
 @Getter
 @Setter
@@ -32,4 +33,16 @@ public class CompanyDto {
 
     @ApiModelProperty(notes = "ФИО руководителя", example = "Иванов И.И.")
     private String chiefFio;
+
+    public static CompanyDto buildDTO(Company company) {
+        return CompanyDto.builder()
+                .companyId(company.getCompanyId())
+                .companyName(company.getCompanyName())
+                .companyInn(company.getCompanyInn())
+                .companyKpp(company.getCompanyKpp())
+                .companyPfr(company.getCompanyPfr())
+                .chiefPosition(company.getChiefPosition())
+                .chiefFio(company.getChiefFio())
+                .build();
+    }
 }

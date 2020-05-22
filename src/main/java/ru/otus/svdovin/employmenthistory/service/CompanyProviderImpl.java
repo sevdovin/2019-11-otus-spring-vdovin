@@ -1,13 +1,14 @@
 package ru.otus.svdovin.employmenthistory.service;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.svdovin.employmenthistory.domain.Company;
 import ru.otus.svdovin.employmenthistory.dto.CompanyDto;
 import ru.otus.svdovin.employmenthistory.exception.APIException;
 import ru.otus.svdovin.employmenthistory.exception.ErrorCode;
 import ru.otus.svdovin.employmenthistory.repository.CompanyRepository;
 
-@Repository
+@Service
 public class CompanyProviderImpl implements CompanyProvider {
 
     private final CompanyRepository companyRepository;
@@ -18,6 +19,8 @@ public class CompanyProviderImpl implements CompanyProvider {
         this.messageService = messageService;
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public CompanyDto getCompany(long companyId) {
         Company company = companyRepository.findById(companyId).orElse(null);
         if (company == null) {
@@ -26,9 +29,10 @@ public class CompanyProviderImpl implements CompanyProvider {
                     ErrorCode.INVALID_COMPANY_ID.getCode()
             );
         }
-        return company.buildDTO();
+        return CompanyDto.buildDTO(company);
     }
 
+    @Transactional
     @Override
     public void updateCompany(CompanyDto companyDto) {
         Company company = companyRepository.findById(companyDto.getCompanyId()).orElse(null);

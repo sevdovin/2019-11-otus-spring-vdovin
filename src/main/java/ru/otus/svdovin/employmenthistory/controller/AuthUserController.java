@@ -16,16 +16,15 @@ import javax.validation.Valid;
 
 import static ru.otus.svdovin.employmenthistory.exception.ExceptionUtils.buildErrorData;
 
-@RestController("AuthUserController_v1")
-@RequestMapping("/authuser/v1")
+@RestController
 @Api(description = "REST API для пользователей", tags = { "AuthUser / Пользователи" })
 public class AuthUserController {
     private Logger logger = LogManager.getLogger();
     
     @Autowired
-    AuthUserProvider authUserProvider;
+    private AuthUserProvider authUserProvider;
 
-    @GetMapping("/{id}")
+    @GetMapping("/authuser/{id}")
     @ApiOperation(value = "Получение пользователя по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = AuthUserDto.class),
@@ -51,7 +50,7 @@ public class AuthUserController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/authuser")
     @ApiOperation(value = "Получение всех пользователей")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = AuthUserDto.class, responseContainer = "List"),
@@ -75,7 +74,7 @@ public class AuthUserController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/authuser")
     @ApiOperation(value = "Создание нового пользователя", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
@@ -103,7 +102,7 @@ public class AuthUserController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/authuser")
     @ApiOperation(value = "Изменение пользователя", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),
@@ -132,7 +131,7 @@ public class AuthUserController {
         }
     }
 
-    @DeleteMapping("/{authUserId}")
+    @DeleteMapping("/authuser/{authUserId}")
     @ApiOperation(value = "Удаление пользователя", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -161,7 +160,7 @@ public class AuthUserController {
         }
     }
 
-    @PostMapping("/enabled")
+    @PostMapping("/authuser/enabled")
     @ApiOperation(value = "Создание нового пользователя", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),

@@ -58,7 +58,7 @@ class EmployeeProviderImplTest {
     void shouldReturnExpectedEmployeeById() {
         val employee = new Employee(NEW_EMPLOYEE_ID, EMPLOYEE_NEW_LASTNAME, EMPLOYEE_NEW_FIRSTNAME,
                 EMPLOYEE_NEW_MIDDLENAME, EMPLOYEE_NEW_BIRTHDAY, EMPLOYEE_NEW_SNILS);
-        val employeeDto = employee.buildDTO();
+        val employeeDto = EmployeeDto.buildDTO(employee);
         Mockito.when(employeeRepository.findById(NEW_EMPLOYEE_ID)).thenReturn(Optional.of(employee));
         EmployeeDto actual = employeeProvider.getEmployee(NEW_EMPLOYEE_ID);
         assertThat(actual).isEqualToComparingFieldByField(employeeDto);
@@ -69,7 +69,7 @@ class EmployeeProviderImplTest {
     void shouldReturnAllEmployees() {
         val employee = new Employee(NEW_EMPLOYEE_ID, EMPLOYEE_NEW_LASTNAME, EMPLOYEE_NEW_FIRSTNAME,
                 EMPLOYEE_NEW_MIDDLENAME, EMPLOYEE_NEW_BIRTHDAY, EMPLOYEE_NEW_SNILS);
-        val employeeDto = employee.buildDTO();
+        val employeeDto = EmployeeDto.buildDTO(employee);
         List<Employee> list = new ArrayList<>();
         list.add(employee);
         Mockito.when(employeeRepository.findAll(Sort.by(Sort.Direction.ASC, "lastName").and(
@@ -90,7 +90,7 @@ class EmployeeProviderImplTest {
                 EMPLOYEE_NEW_MIDDLENAME, EMPLOYEE_NEW_BIRTHDAY, EMPLOYEE_NEW_SNILS, company);
         val employee2 = new Employee(0L, EMPLOYEE_NEW_LASTNAME, EMPLOYEE_NEW_FIRSTNAME,
                 EMPLOYEE_NEW_MIDDLENAME, EMPLOYEE_NEW_BIRTHDAY, EMPLOYEE_NEW_SNILS, company);
-        val employeeDto = employee.buildDTO();
+        val employeeDto = EmployeeDto.buildDTO(employee);
         Mockito.when(companyRepository.findById(COMPANY_NEW_ID)).thenReturn(Optional.of(company));
         Mockito.when(employeeRepository.save(employee2)).thenReturn(employee);
         long newId = employeeProvider.createEmployee(employeeDto);
@@ -102,7 +102,7 @@ class EmployeeProviderImplTest {
     void shouldUpdateExpectedEmployee() {
         val employee = new Employee(NEW_EMPLOYEE_ID, EMPLOYEE_NEW_LASTNAME, EMPLOYEE_NEW_FIRSTNAME,
                 EMPLOYEE_NEW_MIDDLENAME, EMPLOYEE_NEW_BIRTHDAY, EMPLOYEE_NEW_SNILS);
-        val employeeDto = employee.buildDTO();
+        val employeeDto = EmployeeDto.buildDTO(employee);
         Mockito.when(employeeRepository.findById(NEW_EMPLOYEE_ID)).thenReturn(Optional.of(employee));
         employeeProvider.updateEmployee(employeeDto);
         verify(employeeRepository, times(1)).save(employee);

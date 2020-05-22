@@ -1,9 +1,9 @@
 package ru.otus.svdovin.employmenthistory.service;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.svdovin.employmenthistory.domain.RecordType;
-import ru.otus.svdovin.employmenthistory.dto.AuthRoleDto;
 import ru.otus.svdovin.employmenthistory.dto.RecordTypeDto;
 import ru.otus.svdovin.employmenthistory.exception.APIException;
 import ru.otus.svdovin.employmenthistory.exception.ErrorCode;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@Repository
+@Service
 public class RecordTypeProviderImpl implements RecordTypeProvider {
 
     private final RecordTypeRepository recordTypeRepository;
@@ -28,6 +28,7 @@ public class RecordTypeProviderImpl implements RecordTypeProvider {
         this.messageService = messageService;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public RecordTypeDto getRecordType(long recordTypeId) {
         RecordType recordType = recordTypeRepository.findById(recordTypeId).orElse(null);
@@ -37,16 +38,18 @@ public class RecordTypeProviderImpl implements RecordTypeProvider {
                     ErrorCode.INVALID_RECORDTYPE_ID.getCode()
             );
         }
-        return recordType.buildDTO();
+        return RecordTypeDto.buildDTO(recordType);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<RecordTypeDto> getRecordTypeAll() {
         return recordTypeRepository.findAll(
                 Sort.by(Sort.Direction.ASC, "recordTypeId"))
-                .stream().map(e -> e.buildDTO()).collect(toList());
+                .stream().map(e -> RecordTypeDto.buildDTO(e)).collect(toList());
     }
 
+    @Transactional
     @Override
     public long createRecordType(RecordTypeDto recordTypeDto) {
         RecordType recordType = new RecordType(
@@ -56,6 +59,7 @@ public class RecordTypeProviderImpl implements RecordTypeProvider {
         return recordTypeRepository.save(recordType).getRecordTypeId();
     }
 
+    @Transactional
     @Override
     public void updateRecordType(RecordTypeDto recordTypeDto) {
         RecordType recordType = recordTypeRepository.findById(recordTypeDto.getRecordTypeId()).orElse(null);
@@ -70,6 +74,7 @@ public class RecordTypeProviderImpl implements RecordTypeProvider {
         recordTypeRepository.save(recordType);
     }
 
+    @Transactional
     @Override
     public void deleteRecordType(long recordTypeId) {
         RecordType recordType = recordTypeRepository.findById(recordTypeId).orElse(null);

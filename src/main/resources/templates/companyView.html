@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{companyView.title}">Параметры предприятия</title>
+    <style>
+#my_body        { background-color: #fffff5; height: 100%; }
+h1              { text-align: center }
+.center         { text-align: center }
+.btn2           { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; display:inline-block; }
+table           { width: 80%; margin-left: auto; margin-right: auto }
+table tbody     { height: 500px; overflow-y: scroll; display: block; }
+table thead     { display: block; }
+.row            { margin-top: 10px; }
+label           { display: inline-block; width: 150px; }
+input:read-only { background: lightgray; }
+#name-input     { width: 500px }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body id="my_body">
+
+    <form id="edit-form" action="companyView.html">
+        <div>
+            <h1 th:text="#{companyView.title}">Параметры предприятия</h1>
+        </div>
+        
+        <div class="row">
+            <label for="id-input" th:text="#{companyView.id}">Идентификатор:</label>
+            <input id="id-input" type="text" readonly="readonly" value="1"/>
+        </div>
+
+        <div class="row">
+            <label for="name-input" th:text="#{companyView.name}">Наименование:</label>
+            <input id="name-input" name="name" type="text" readonly="readonly" value="Рога и копыта"/>
+        </div>
+
+        <div class="row">
+            <label for="inn-input" th:text="#{companyView.inn}">ИНН:</label>
+            <input id="inn-input" name="inn" type="text" readonly="readonly" value="770211001"/>
+        </div>
+
+        <div class="row">
+            <label for="kpp-input" th:text="#{companyView.kpp}">КПП:</label>
+            <input id="kpp-input" name="kpp" type="text" readonly="readonly" value="770201001"/>
+        </div>
+
+        <div class="row">
+            <label for="pfr-input" th:text="#{companyView.pfr}">Рег.номер в ПФР:</label>
+            <input id="pfr-input" name="pfr" type="text" readonly="readonly" value="087-109-654321"/>
+        </div>
+
+        <div class="row">
+            <label for="position-input" th:text="#{companyView.position}">Должность руководителя:</label>
+            <input id="position-input" name="position" type="text" readonly="readonly" value="Директор"/>
+        </div>
+
+        <div class="row">
+            <label for="fio-input" th:text="#{companyView.fio}">ФИО руководителя:</label>
+            <input id="fio-input" name="fio" type="text" readonly="readonly" value="Иванов И.И."/>
+        </div>
+
+        <div class="center">
+            <button id="returnButton" class="btn2" th:text="#{companyView.back}">Назад</button>
+            <button type="submit" class="btn2" th:text="#{companyView.edit}">Изменить</button>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            $.get('/company/1').done(function (company) {
+                $("#id-input").val(company.companyId);
+                $("#name-input").val(company.companyName);
+                $("#inn-input").val(company.companyInn);
+                $("#kpp-input").val(company.companyKpp);
+                $("#pfr-input").val(company.companyPfr);
+                $("#position-input").val(company.chiefPosition);
+                $("#fio-input").val(company.chiefFio);
+            })
+        });
+        $("#returnButton").click(function() {
+            event.preventDefault();
+            var url = "/staff";
+            $(location).attr('href',url);
+        });
+        $("#edit-form").submit(function(record) {
+            event.preventDefault();
+            var url = "/companyEdit";
+            $(location).attr('href',url);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{employeeList.title}">Список сотрудников</title>
+    <style>
+#my_body     { background-color: #fffff5; height: 100% }
+h1           { text-align: center }
+.lastname    { width: 300px; text-align: left }
+.firstname   { width: 200px; text-align: left }
+.middlename  { width: 200px; text-align: left }
+.center      { text-align: center }
+.btn2        { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; }
+table        { width: 80%; margin-left: auto; margin-right: auto }
+table tbody  { height: 500px; overflow-y: scroll; display: block; }
+table thead  { display: block; }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body id="my_body">
+    <div>
+        <h1 th:text="#{employeeList.title}">Список сотрудников</h1>
+    </div>
+    <div>
+        <div>
+            <table class="employees" border="1">
+                <thead>
+                    <tr>
+                        <th class="lastname" th:text="#{employeeList.lastname}">Фамилия</th>
+                        <th class="firstname" th:text="#{employeeList.firstname}">Имя</th>
+                        <th class="middlename" th:text="#{employeeList.middlename}">Отчество</th>
+                    </tr>
+                </thead>
+                <tbody id="employeesTableBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="center">
+            <form style="display:inline-block;">
+                <button id="returnButton" type="button" class="btn2" th:text="#{employeeList.back}">Назад</button>
+            </form>
+            <form style="display:inline-block;">
+                <button id="employeeAdd" type="button" class="btn2" th:text="#{employeeList.employeeAdd}">Добавить сотрудника</button>
+            </form>
+        </div>
+    </div>
+    <script>
+    $(function () {
+        $.get('/employee').done(function (employees) {
+            employees.forEach(function (employee) {
+                $('tbody').append(`
+                    <tr>
+                        <td class="lastname">${employee.lastName}</td>
+                        <td class="firstname">${employee.firstName}</td>
+                        <td class="middlename">${employee.middleName}</td>
+                        <td><a href="/employeeEdit?id=${employee.employeeId}">Изменить</a></td>
+                        <td><a href="/employeeDelete?id=${employee.employeeId}">Удалить</a></td>
+                        <td><a href="/empBookView?id=${employee.employeeId}">Трудовая книжка</a></td>
+                    </tr>
+                `)
+            });
+        })
+    });
+    $("#returnButton").click(function() {
+        var url = "/staff";
+        $(location).attr('href',url);
+    });
+    $("#employeeAdd").click(function() {
+        var url = "/employeeAdd";
+        $(location).attr('href',url);
+    });
+    </script>
+</body>
+</html>

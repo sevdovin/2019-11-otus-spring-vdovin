@@ -70,7 +70,7 @@ class RecordProviderImplTest {
         val record = new Record(RECORD_NEW_ID, RECORD_NEW_DATE, RECORD_NEW_POSITION,
                 RECORD_NEW_CODE, RECORD_NEW_REASON, RECORD_NEW_DOCNAME, RECORD_NEW_DOCDATE,
                 RECORD_NEW_DOCNUMBER, RECORD_NEW_CANCEL);
-        val recordDto = record.buildDTO();
+        val recordDto = RecordDto.buildDTO(record);
         Mockito.when(recordRepository.findById(RECORD_NEW_ID)).thenReturn(Optional.of(record));
         RecordDto actual = recordProvider.getRecord(RECORD_NEW_ID);
         assertThat(actual).isEqualToComparingFieldByField(recordDto);
@@ -82,7 +82,7 @@ class RecordProviderImplTest {
         val record = new Record(RECORD_NEW_ID, RECORD_NEW_DATE, RECORD_NEW_POSITION,
                 RECORD_NEW_CODE, RECORD_NEW_REASON, RECORD_NEW_DOCNAME, RECORD_NEW_DOCDATE,
                 RECORD_NEW_DOCNUMBER, RECORD_NEW_CANCEL);
-        val recordDto = record.buildDTO();
+        val recordDto = RecordDto.buildDTO(record);
         List<Record> list = new ArrayList<>();
         list.add(record);
         Mockito.when(recordRepository.findByEmployeeEmployeeId(NEW_EMPLOYEE_ID,
@@ -106,7 +106,7 @@ class RecordProviderImplTest {
         val record2 = new Record(0L, RECORD_NEW_DATE, RECORD_NEW_POSITION,
                 RECORD_NEW_CODE, RECORD_NEW_REASON, RECORD_NEW_DOCNAME, RECORD_NEW_DOCDATE,
                 RECORD_NEW_DOCNUMBER, RECORD_NEW_CANCEL, employee, recordType);
-        val recordDto = record.buildDTO();
+        val recordDto = RecordDto.buildDTO(record);
         Mockito.when(recordTypeRepository.findById(RECORD_TYPE_NEW_ID)).thenReturn(Optional.of(recordType));
         Mockito.when(employeeRepository.findById(NEW_EMPLOYEE_ID)).thenReturn(Optional.of(employee));
         Mockito.when(recordRepository.save(record2)).thenReturn(record);
@@ -120,7 +120,7 @@ class RecordProviderImplTest {
         val record = new Record(RECORD_NEW_ID, RECORD_NEW_DATE, RECORD_NEW_POSITION,
                 RECORD_NEW_CODE, RECORD_NEW_REASON, RECORD_NEW_DOCNAME, RECORD_NEW_DOCDATE,
                 RECORD_NEW_DOCNUMBER, RECORD_NEW_CANCEL);
-        val recordDto = record.buildDTO();
+        val recordDto = RecordDto.buildDTO(record);
         Mockito.when(recordRepository.findById(RECORD_NEW_ID)).thenReturn(Optional.of(record));
         recordProvider.updateRecord(recordDto);
         verify(recordRepository, times(1)).save(record);

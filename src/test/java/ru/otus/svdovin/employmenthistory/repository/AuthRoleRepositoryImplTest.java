@@ -1,6 +1,5 @@
 package ru.otus.svdovin.employmenthistory.repository;
 
-import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +28,6 @@ class AuthRoleRepositoryImplTest {
     @Autowired
     private TestEntityManager em;
 
-    @DisplayName("добавлять роль пользователей")
-    @Test
-    void shouldInsertAuthRole() {
-        val authRole = new AuthRole(0, AUTHROLE_NEW_ROLESYSNAME, AUTHROLE_NEW_ROLENAME);
-        long newId = authRoleRepository.save(authRole).getRoleId();
-        authRole.setRoleId(newId);
-        val actual = em.find(AuthRole.class, newId);
-        assertThat(actual).isNotNull().isEqualToComparingFieldByField(authRole);
-    }
-
     @DisplayName("изменять роль пользователей")
     @Test
     void shouldUpdateAuthRoleName() {
@@ -48,17 +37,6 @@ class AuthRoleRepositoryImplTest {
         authRole1.setRoleName(AUTHROLE_NEW_ROLENAME);
         AuthRole authRole2 = authRoleRepository.save(authRole1);
         assertThat(authRole2.getRoleName()).isNotEqualTo(oldName).isEqualTo(AUTHROLE_NEW_ROLENAME);
-    }
-
-    @DisplayName("удалять роль пользователей")
-    @Test
-    void shouldDeleteAuthRole() {
-        val authRole1 = em.find(AuthRole.class, AUTHROLE_ID_EXIST);
-        assertThat(authRole1).isNotNull();
-        em.detach(authRole1);
-        authRoleRepository.deleteById(AUTHROLE_ID_EXIST);
-        val authRole2 = em.find(AuthRole.class, AUTHROLE_ID_EXIST);
-        assertThat(authRole2).isNull();
     }
 
     @DisplayName("возвращать роль пользователей по id")

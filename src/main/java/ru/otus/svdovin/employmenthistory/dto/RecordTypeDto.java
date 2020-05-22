@@ -3,6 +3,7 @@ package ru.otus.svdovin.employmenthistory.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import ru.otus.svdovin.employmenthistory.domain.RecordType;
 
 @Getter
 @Setter
@@ -20,4 +21,12 @@ public class RecordTypeDto {
 
     @ApiModelProperty(notes = "Наименование типа", example = "ПЕРЕВОД")
     private String typeName;
+
+    public static RecordTypeDto buildDTO(RecordType recordType) {
+        return RecordTypeDto.builder()
+                .recordTypeId(recordType.getRecordTypeId())
+                .typeCode(recordType.getTypeCode())
+                .typeName(recordType.getTypeName())
+                .build();
+    }
 }

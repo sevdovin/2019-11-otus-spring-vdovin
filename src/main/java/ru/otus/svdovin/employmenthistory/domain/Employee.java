@@ -3,7 +3,6 @@ package ru.otus.svdovin.employmenthistory.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.otus.svdovin.employmenthistory.dto.EmployeeDto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "employee")
+@NamedEntityGraph(name = "Employee.company", attributeNodes = @NamedAttributeNode("company"))
 public class Employee {
 
     @Id
@@ -52,20 +52,5 @@ public class Employee {
     public String toString() {
         return String.format("Сотрудник id=%d, фамилия=\"%s\", имя=\"%s\", отчество=\"%s\", день рождения=\"%s\", СНИЛС=\"%s\"",
                employeeId, lastName, firstName, middleName, birthday, snils);
-    }
-
-    public EmployeeDto buildDTO() {
-        EmployeeDto result = EmployeeDto.builder()
-                .employeeId(employeeId)
-                .lastName(lastName)
-                .firstName(firstName)
-                .middleName(middleName)
-                .birthday(birthday)
-                .snils(snils)
-                .build();
-        if (company != null) {
-            result.setCompanyId(company.getCompanyId());
-        }
-        return result;
     }
 }

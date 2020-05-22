@@ -1,7 +1,8 @@
 package ru.otus.svdovin.employmenthistory.service;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.svdovin.employmenthistory.domain.Employee;
 import ru.otus.svdovin.employmenthistory.domain.Record;
 import ru.otus.svdovin.employmenthistory.domain.RecordType;
@@ -16,7 +17,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@Repository
+@Service
 public class RecordProviderImpl implements RecordProvider {
 
     private final RecordRepository recordRepository;
@@ -41,15 +42,17 @@ public class RecordProviderImpl implements RecordProvider {
                     ErrorCode.INVALID_RECORD_ID.getCode()
             );
         }
-        return record.buildDTO();
+        return RecordDto.buildDTO(record);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<RecordDto> getRecordsByEmployeeId(long employeeId) {
         return recordRepository.findByEmployeeEmployeeId(employeeId, Sort.by(Sort.Direction.ASC, "recordId"))
-                .stream().map(r -> r.buildDTO()).collect(toList());
+                .stream().map(r -> RecordDto.buildDTO(r)).collect(toList());
     }
 
+    @Transactional
     @Override
     public long createRecord(RecordDto recordDto) {
         Long typeCodeId = recordDto.getTypeCodeId();
@@ -95,6 +98,7 @@ public class RecordProviderImpl implements RecordProvider {
         return recordRepository.save(record).getRecordId();
     }
 
+    @Transactional
     @Override
     public void updateRecord(RecordDto recordDto) {
         Record record = recordRepository.findById(recordDto.getRecordId()).orElse(null);
@@ -103,6 +107,12 @@ public class RecordProviderImpl implements RecordProvider {
                     messageService.getMessage("employmentHistory.RecordNotFound"),
                     ErrorCode.RECORD_NOT_FOUND.getCode()
             );
+        }
+        if (recordDto.getTypeCodeId() != null) {
+            RecordType recordType = recordTypeRepository.findById(recordDto.getTypeCodeId()).orElse(null);
+            if (recordType != null) {
+                record.setRecordType(recordType);
+            }
         }
         if (recordDto.getDate() != null) record.setDate(recordDto.getDate());
         if (recordDto.getPosition() != null) record.setPosition(recordDto.getPosition());
@@ -115,6 +125,7 @@ public class RecordProviderImpl implements RecordProvider {
         recordRepository.save(record);
     }
 
+    @Transactional
     @Override
     public void deleteRecord(long recordId) {
         Record record = recordRepository.findById(recordId).orElse(null);

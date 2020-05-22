@@ -3,8 +3,8 @@ application:
 
 server:
   port: 8080
-  servlet:
-    context-path: ${SERVICE_CONTEXT:/employmenthistory}
+  #servlet:
+  #  context-path: ${SERVICE_CONTEXT:/employmenthistory}
   error:
     include-stacktrace: always
 
@@ -33,3 +33,4 @@ spring:
   messages:
     basename: i18n/bundle
     encoding: UTF-8
+

@@ -16,16 +16,15 @@ import javax.validation.Valid;
 
 import static ru.otus.svdovin.employmenthistory.exception.ExceptionUtils.buildErrorData;
 
-@RestController("EmployeeController_v1")
-@RequestMapping("/employee/v1")
+@RestController
 @Api(description = "REST API для сотрудников", tags = { "Employee / Сотрудники" })
 public class EmployeeController {
     private Logger logger = LogManager.getLogger();
     
     @Autowired
-    EmployeeProvider employeeProvider;
+    private EmployeeProvider employeeProvider;
 
-    @GetMapping("/{id}")
+    @GetMapping("/employee/{id}")
     @ApiOperation(value = "Получение сотрудника по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = EmployeeDto.class),
@@ -51,7 +50,7 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/employee")
     @ApiOperation(value = "Получение всех сотрудников")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = EmployeeDto.class, responseContainer = "List"),
@@ -75,7 +74,7 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/employee")
     @ApiOperation(value = "Создание нового сотрудника", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
@@ -103,7 +102,7 @@ public class EmployeeController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/employee")
     @ApiOperation(value = "Изменение атрибутов сотрудника", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),
@@ -132,7 +131,7 @@ public class EmployeeController {
         }
     }
 
-    @DeleteMapping("/{employeeId}")
+    @DeleteMapping("/employee/{employeeId}")
     @ApiOperation(value = "Удаление сотрудника", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -160,6 +159,4 @@ public class EmployeeController {
             );
         }
     }
-
-
 }

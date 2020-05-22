@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface AuthUserProvider {
     AuthUserDto getAuthUser(long authUserId);
+    AuthUserDto getAuthUserByLogin(String login);
     List<AuthUserDto> getAuthUserAll();
     long createAuthUser(AuthUserDto authUserDto);
     void updateAuthUser(AuthUserDto authUserDto);

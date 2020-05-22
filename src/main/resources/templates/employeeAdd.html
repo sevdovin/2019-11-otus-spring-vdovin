@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{employeeAdd.title}">Добавление нового сотрудника</title>
+    <style>
+#my_body        { background-color: #fffff5; height: 100%; }
+h1              { text-align: center }
+.center         { text-align: center }
+.btn2           { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; display:inline-block; }
+table           { width: 80%; margin-left: auto; margin-right: auto }
+table tbody     { height: 500px; overflow-y: scroll; display: block; }
+table thead     { display: block; }
+.row            { margin-top: 10px; }
+label           { display: inline-block; width: 150px; }
+input:read-only { background: lightgray; }
+    </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body id="my_body">
+
+    <form id="edit-form" action="employeeList.html">
+        <div>
+            <h1 th:text="#{employeeAdd.title}">Добавление нового сотрудника</h1>
+        </div>
+        
+        <div class="row">
+            <label for="lastname-input" th:text="#{employeeEdit.lastname}">Фамилия:</label>
+            <input id="lastname-input" name="lastname" type="text" value="Иванов"/>
+        </div>
+        
+        <div class="row">
+            <label for="firstname-input" th:text="#{employeeEdit.firstname}">Имя:</label>
+            <input id="firstname-input" name="firstname" type="text" value="Иван"/>
+        </div>
+
+        <div class="row">
+            <label for="middlename-input" th:text="#{employeeEdit.middlename}">Отчество:</label>
+            <input id="middlename-input" name="middlename" type="text" value="Иванович"/>
+        </div>
+
+        <div class="row">
+            <label for="birthday-input" th:text="#{employeeEdit.birthday}">Имя:</label>
+            <input id="birthday-input" name="birthday" type="text" value="1990-12-31"/>
+        </div>
+
+        <div class="row">
+            <label for="snils-input" th:text="#{employeeEdit.snils}">Снилс:</label>
+            <input id="snils-input" name="snils" type="text" value="11111"/>
+        </div>
+
+        <div class="center">
+            <button id="returnButton" class="btn2" th:text="#{employeeEdit.back}">Назад</button>
+            <button type="submit" class="btn2" th:text="#{employeeEdit.save}">Сохранить</button>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            $("#lastname-input").val("");
+            $("#firstname-input").val("");
+            $("#middlename-input").val("");
+            $("#birthday-input").val("");
+            $("#snils-input").val("");
+        });
+        $("#edit-form").submit(function(event) {
+            event.preventDefault();
+            var data = {}
+            data["lastName"] = $("#lastname-input").val();
+            data["firstName"] = $("#firstname-input").val();
+            data["middleName"] = $("#middlename-input").val();
+            data["birthday"] = $("#birthdaye-input").val();
+            data["snils"] = $("#snils-input").val();
+            //data["companyId"] = 1;
+            $.post({
+                url : '/employee',
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                dataType: 'json',
+                success: function (data) {
+                    alert('OK!');
+                    var url = "/employeeList";
+                    $(location).attr('href',url);
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = xhr.status + ': ' + xhr.responseText;
+                    alert('Error - ' + errorMessage);
+                }
+            })
+        });
+        $("#returnButton").click(function() {
+            event.preventDefault();
+            var url = "/employeeList";
+            $(location).attr('href',url);
+        });
+    </script>
+</body>
+</html>

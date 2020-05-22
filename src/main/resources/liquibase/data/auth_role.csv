@@ -1,4 +1,4 @@
 id;sysname;name
-1;admin;Администратор
-2;personnelofficer;Кадровик
-3;employee;Сотрудник
+1;ADMIN;Администратор
+2;MANAGER;Кадровик
+3;EMPLOYEE;Сотрудник
