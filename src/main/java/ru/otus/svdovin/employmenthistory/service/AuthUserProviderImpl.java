@@ -3,11 +3,16 @@ package ru.otus.svdovin.employmenthistory.service;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.svdovin.employmenthistory.domain.AuthRole;
 import ru.otus.svdovin.employmenthistory.domain.AuthUser;
+import ru.otus.svdovin.employmenthistory.domain.Employee;
 import ru.otus.svdovin.employmenthistory.dto.AuthUserDto;
+import ru.otus.svdovin.employmenthistory.dto.EmployeeDto;
 import ru.otus.svdovin.employmenthistory.exception.APIException;
 import ru.otus.svdovin.employmenthistory.exception.ErrorCode;
+import ru.otus.svdovin.employmenthistory.repository.AuthRoleRepository;
 import ru.otus.svdovin.employmenthistory.repository.AuthUserRepository;
+import ru.otus.svdovin.employmenthistory.repository.EmployeeRepository;
 
 import java.util.List;
 
@@ -17,10 +22,15 @@ import static java.util.stream.Collectors.toList;
 public class AuthUserProviderImpl implements AuthUserProvider {
 
     private final AuthUserRepository authUserRepository;
+    private final AuthRoleRepository authRoleRepository;
+    private final EmployeeRepository employeeRepository;
     private final MessageService messageService;
 
-    public AuthUserProviderImpl(AuthUserRepository authUserRepository, MessageService messageService) {
+    public AuthUserProviderImpl(AuthUserRepository authUserRepository, AuthRoleRepository authRoleRepository,
+                                EmployeeRepository employeeRepository, MessageService messageService) {
         this.authUserRepository = authUserRepository;
+        this.authRoleRepository = authRoleRepository;
+        this.employeeRepository = employeeRepository;
         this.messageService = messageService;
     }
 
@@ -67,6 +77,18 @@ public class AuthUserProviderImpl implements AuthUserProvider {
                 authUserDto.getPassword(),
                 authUserDto.getIsEnabled(),
                 authUserDto.getEmail());
+        if (authUserDto.getRoleid() != null) {
+            AuthRole authRole = authRoleRepository.findById(authUserDto.getRoleid()).orElse(null);
+            if (authRole != null) {
+                authUser.setAuthRole(authRole);
+            }
+        }
+        if (authUserDto.getEmployeeId() != null) {
+            Employee employee = employeeRepository.findById(authUserDto.getEmployeeId()).orElse(null);
+            if (employee != null) {
+                authUser.setEmployee(employee);
+            }
+        }
         return authUserRepository.save(authUser).getUserId();
     }
 
@@ -84,6 +106,18 @@ public class AuthUserProviderImpl implements AuthUserProvider {
         if (authUserDto.getPassword() != null) authUser.setPassword(authUserDto.getPassword());
         if (authUserDto.getIsEnabled() != null) authUser.setIsEnabled(authUserDto.getIsEnabled());
         if (authUserDto.getEmail() != null) authUser.setEmail(authUserDto.getEmail());
+        if (authUserDto.getRoleid() != null) {
+            AuthRole authRole = authRoleRepository.findById(authUserDto.getRoleid()).orElse(null);
+            if (authRole != null) {
+                authUser.setAuthRole(authRole);
+            }
+        }
+        if (authUserDto.getEmployeeId() != null) {
+            Employee employee = employeeRepository.findById(authUserDto.getEmployeeId()).orElse(null);
+            if (employee != null) {
+                authUser.setEmployee(employee);
+            }
+        }
         authUserRepository.save(authUser);
     }
 

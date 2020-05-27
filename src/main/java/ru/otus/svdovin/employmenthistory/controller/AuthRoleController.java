@@ -24,7 +24,7 @@ public class AuthRoleController {
     @Autowired
     private AuthRoleProvider authRoleProvider;
 
-    @GetMapping("/authrole/{id}")
+    @GetMapping("/api/v1/authrole/{id}")
     @ApiOperation(value = "Получение ролей пользователей по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = AuthRoleDto.class),
@@ -50,7 +50,7 @@ public class AuthRoleController {
         }
     }
 
-    @GetMapping("/authrole")
+    @GetMapping("/api/v1/authrole")
     @ApiOperation(value = "Получение всех ролей пользователей")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = AuthRoleDto.class, responseContainer = "List"),
@@ -74,7 +74,7 @@ public class AuthRoleController {
         }
     }
 
-    @PutMapping("/authrole")
+    @PutMapping("/api/v1/authrole")
     @ApiOperation(value = "Изменение роли пользователей", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),

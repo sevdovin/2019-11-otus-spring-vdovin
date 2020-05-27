@@ -24,7 +24,7 @@ public class RecordController {
     @Autowired
     private RecordProvider recordProvider;
 
-    @GetMapping("/record/{id}")
+    @GetMapping("/api/v1/record/{id}")
     @ApiOperation(value = "Получение записи трудовой книжки по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = RecordDto.class),
@@ -50,7 +50,7 @@ public class RecordController {
         }
     }
 
-    @GetMapping("/record/employee/{id}")
+    @GetMapping("/api/v1/record/employee/{id}")
     @ApiOperation(value = "Получение записей трудовой книжки по идентификатору сотрудника")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = RecordDto.class),
@@ -76,7 +76,7 @@ public class RecordController {
         }
     }
 
-    @PostMapping("/record")
+    @PostMapping("/api/v1/record")
     @ApiOperation(value = "Создание записи трудовой книжки", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
@@ -104,7 +104,7 @@ public class RecordController {
         }
     }
 
-    @PutMapping("/record")
+    @PutMapping("/api/v1/record")
     @ApiOperation(value = "Изменение записи трудовой книжки", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),
@@ -133,7 +133,7 @@ public class RecordController {
         }
     }
 
-    @DeleteMapping("/record/{recordId}")
+    @DeleteMapping("/api/v1/record/{recordId}")
     @ApiOperation(value = "Удаление записи трудовой книжки", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

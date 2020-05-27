@@ -14,6 +14,8 @@ import ru.otus.svdovin.employmenthistory.service.EmployeeProvider;
 
 import javax.validation.Valid;
 
+import java.util.List;
+
 import static ru.otus.svdovin.employmenthistory.exception.ExceptionUtils.buildErrorData;
 
 @RestController
@@ -24,7 +26,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeProvider employeeProvider;
 
-    @GetMapping("/employee/{id}")
+    @GetMapping("/api/v1/employee/{id}")
     @ApiOperation(value = "Получение сотрудника по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = EmployeeDto.class),
@@ -50,7 +52,7 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/employee")
+    @GetMapping("/api/v1/employee")
     @ApiOperation(value = "Получение всех сотрудников")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = EmployeeDto.class, responseContainer = "List"),
@@ -74,7 +76,7 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("/employee")
+    @PostMapping("/api/v1/employee")
     @ApiOperation(value = "Создание нового сотрудника", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
@@ -102,7 +104,7 @@ public class EmployeeController {
         }
     }
 
-    @PutMapping("/employee")
+    @PutMapping("/api/v1/employee")
     @ApiOperation(value = "Изменение атрибутов сотрудника", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),
@@ -131,7 +133,7 @@ public class EmployeeController {
         }
     }
 
-    @DeleteMapping("/employee/{employeeId}")
+    @DeleteMapping("/api/v1/employee/{employeeId}")
     @ApiOperation(value = "Удаление сотрудника", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

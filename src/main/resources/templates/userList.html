@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{userList.title}">Список пользователей</title>
+    <style>
+#my_body        { background-color: #fffff5; height: 100% }
+h1              { text-align: center }
+.id             { width: 80px; text-align: left }
+.rolesysname    { width: 120px; text-align: left }
+.empfio         { width: 260px; text-align: left }
+.login          { width: 100px; text-align: left }
+.password       { width: 550px; text-align: left }
+.isenabled      { width: 80px; text-align: left }
+.email          { width: 150px; text-align: left }
+.center         { text-align: center }
+.btn2           { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; }
+table           { width: 100%; margin-left: auto; margin-right: auto; table-layout: fixed; }
+table tbody     { height: 500px; overflow-y: scroll; display: block; }
+table thead     { display: block; }
+table th        { word-break: break-all; }
+table tr td     { word-break: break-all; }
+    </style>
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+</head>
+<body id="my_body">
+    <div>
+        <h1 th:text="#{userList.title}">Список пользователей</h1>
+    </div>
+    <div>
+        <div>
+            <table class="employees" border="1">
+                <thead>
+                    <tr>
+                        <th class="id" th:text="#{userList.id}">Идентификатор</th>
+                        <th class="rolesysname" th:text="#{userList.rolesysname}">Системное имя роли</th>
+                        <th class="empfio" th:text="#{userList.empfio}">ФИО сотрудника</th>
+                        <th class="login" th:text="#{userList.login}">Логин</th>
+                        <th class="password" th:text="#{userList.password}">Хэш пароля</th>
+                        <th class="isenabled" th:text="#{userList.isenabled}">Активен</th>
+                        <th class="email" th:text="#{userList.email}">Эл.почта</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="center">
+            <form style="display:inline-block;">
+                <button id="returnButton" type="button" class="btn2" th:text="#{userList.back}">Назад</button>
+            </form>
+            <form style="display:inline-block;">
+                <button id="userAdd" type="button" class="btn2" th:text="#{userList.userAdd}">Новый пользователь</button>
+            </form>
+        </div>
+    </div>
+    <script>
+    $(function () {
+        $.get('/api/v1/authuser').done(function (users) {
+            users.forEach(function (userone) {
+                $('tbody').append(`
+                    <tr>
+                        <td class="id">${userone.userId}</td>
+                        <td class="rolesysname">${userone.roleSysName}</td>
+                        <td class="empfio">${userone.empFio}</td>
+                        <td class="login">${userone.login}</td>
+                        <td class="password">${userone.password}</td>
+                        <td class="isenabled">${userone.isEnabled}</td>
+                        <td class="email">${userone.email}</td>
+                        <td><a href="/userEdit?userId=${userone.userId}&roleId=${userone.roleid}&employeeId=${userone.employeeId}">Изменить</a></td>
+                        <td><a href="/userDelete?userId=${userone.userId}&roleId=${userone.roleid}&employeeId=${userone.employeeId}">Удалить</a></td>
+                    </tr>
+                `)
+            });
+        })
+    });
+    $("#returnButton").click(function() {
+        var url = "/admin";
+        $(location).attr('href',url);
+    });
+    $("#userAdd").click(function() {
+        var url2 = "/userAdd";
+        $(location).attr('href',url2);
+    });
+    </script>
+</body>
+</html>

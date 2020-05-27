@@ -14,6 +14,8 @@ import ru.otus.svdovin.employmenthistory.service.AuthUserProvider;
 
 import javax.validation.Valid;
 
+import java.util.List;
+
 import static ru.otus.svdovin.employmenthistory.exception.ExceptionUtils.buildErrorData;
 
 @RestController
@@ -50,7 +52,7 @@ public class AuthUserController {
         }
     }
 
-    @GetMapping("/authuser")
+    @GetMapping("/api/v1/authuser")
     @ApiOperation(value = "Получение всех пользователей")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = AuthUserDto.class, responseContainer = "List"),
@@ -74,7 +76,7 @@ public class AuthUserController {
         }
     }
 
-    @PostMapping("/authuser")
+    @PostMapping("/api/v1/authuser")
     @ApiOperation(value = "Создание нового пользователя", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
@@ -102,7 +104,7 @@ public class AuthUserController {
         }
     }
 
-    @PutMapping("/authuser")
+    @PutMapping("/api/v1/authuser")
     @ApiOperation(value = "Изменение пользователя", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),
@@ -131,7 +133,7 @@ public class AuthUserController {
         }
     }
 
-    @DeleteMapping("/authuser/{authUserId}")
+    @DeleteMapping("/api/v1/authuser/{authUserId}")
     @ApiOperation(value = "Удаление пользователя", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -160,7 +162,7 @@ public class AuthUserController {
         }
     }
 
-    @PostMapping("/authuser/enabled")
+    @PostMapping("/api/v1/authuser/enabled")
     @ApiOperation(value = "Создание нового пользователя", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),

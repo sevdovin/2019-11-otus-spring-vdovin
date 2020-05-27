@@ -15,7 +15,7 @@ table        { width: 80%; margin-left: auto; margin-right: auto }
 table tbody  { height: 500px; overflow-y: scroll; display: block; }
 table thead  { display: block; }
     </style>
-    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
 </head>
 <body id="my_body">
     <div>
@@ -23,7 +23,7 @@ table thead  { display: block; }
     </div>
     <div>
         <div>
-            <table class="employees" border="1">
+            <table id="employees" class="employees" border="1">
                 <thead>
                     <tr>
                         <th class="lastname" th:text="#{employeeList.lastname}">Фамилия</th>
@@ -46,7 +46,7 @@ table thead  { display: block; }
     </div>
     <script>
     $(function () {
-        $.get('/employee').done(function (employees) {
+        $.get('/api/v1/employee').done(function (employees) {
             employees.forEach(function (employee) {
                 $('tbody').append(`
                     <tr>

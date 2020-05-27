@@ -16,7 +16,7 @@ label           { display: inline-block; width: 150px; }
 input:read-only { background: lightgray; }
 #name-input     { width: 500px }
     </style>
-    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
 </head>
 <body id="my_body">
 
@@ -67,7 +67,7 @@ input:read-only { background: lightgray; }
     </form>
     <script>
         $(function () {
-            $.get('/company/1').done(function (company) {
+            $.get('/api/v1/company/1').done(function (company) {
                 $("#id-input").val(company.companyId);
                 $("#name-input").val(company.companyName);
                 $("#inn-input").val(company.companyInn);

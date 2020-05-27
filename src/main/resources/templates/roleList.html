@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{roleList.title}">Список ролей</title>
+    <style>
+#my_body     { background-color: #fffff5; height: 100% }
+h1           { text-align: center }
+.id          { width: 200px; text-align: left }
+.sysname     { width: 200px; text-align: left }
+.name        { width: 300px; text-align: left }
+.center      { text-align: center }
+.btn2        { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; }
+table        { width: 50%; margin-left: auto; margin-right: auto }
+table tbody  { height: 500px; overflow-y: scroll; display: block; }
+table thead  { display: block; }
+    </style>
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+</head>
+<body id="my_body">
+    <div>
+        <h1 th:text="#{roleList.title}">Список ролей</h1>
+    </div>
+    <div>
+        <div>
+            <table class="employees" border="1">
+                <thead>
+                    <tr>
+                        <th class="id" th:text="#{roleList.id}">Идентификатор</th>
+                        <th class="sysname" th:text="#{roleList.sysname}">Системное имя</th>
+                        <th class="name" th:text="#{roleList.name}">Наименование</th>
+                    </tr>
+                </thead>
+                <tbody id="employeesTableBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="center">
+            <form style="display:inline-block;">
+                <button id="returnButton" type="button" class="btn2" th:text="#{roleList.back}">Назад</button>
+            </form>
+        </div>
+    </div>
+    <script>
+    $(function () {
+        $.get('/api/v1/authrole').done(function (roles) {
+            roles.forEach(function (role) {
+                $('tbody').append(`
+                    <tr>
+                        <td class="id">${role.roleId}</td>
+                        <td class="sysname">${role.roleSysName}</td>
+                        <td class="name">${role.roleName}</td>
+                    </tr>
+                `)
+            });
+        })
+    });
+    $("#returnButton").click(function() {
+        var url = "/admin";
+        $(location).attr('href',url);
+    });
+    </script>
+</body>
+</html>

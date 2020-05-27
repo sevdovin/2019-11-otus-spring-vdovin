@@ -18,7 +18,7 @@ table        { width: 90%; margin-left: auto; margin-right: auto; margin-top: 10
 table tbody  { height: 500px; overflow-y: scroll; display: block; }
 table thead  { display: block; }
     </style>
-    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
 </head>
 <body id="my_body">
     <div>
@@ -51,10 +51,13 @@ table thead  { display: block; }
         </div>
         <div class="center">
             <form style="display:inline-block;">
-                <button id="returnButton" type="button" class="btn2" th:text="#{employeeList.back}">Назад</button>
+                <button id="returnButton" type="button" class="btn2" th:text="#{empBookView.back}">Назад</button>
             </form>
             <form style="display:inline-block;">
                 <button id="recordAdd" type="button" class="btn2" th:text="#{empBookView.recordAdd}">Добавить запись</button>
+            </form>
+            <form style="display:inline-block;">
+                <button id="makePdf" type="button" class="btn2" th:text="#{empBookView.pdf}">Сформировать PDF</button>
             </form>
         </div>
     </div>
@@ -62,12 +65,12 @@ table thead  { display: block; }
     $(function () {
         let url = new URL(window.location.href);
         let id = url.searchParams.get("id");
-        $.get('/employee/' + id).done(function (employee) {
+        $.get('/api/v1/employee/' + id).done(function (employee) {
             $("#lastname-input").val(employee.lastName);
             $("#firstname-input").val(employee.firstName);
             $("#middlename-input").val(employee.middleName);
         })
-        $.get('/record/employee/' + id).done(function (records) {
+        $.get('/api/v1/record/employee/' + id).done(function (records) {
             records.forEach(function (record) {
                 $('tbody').append(`
                     <tr>
@@ -90,8 +93,14 @@ table thead  { display: block; }
     });
     $("#recordAdd").click(function() {
         let url = new URL(window.location.href);
-        let id = url.searchParams.get("id");
-        var url2 = "/empBookAdd?employeeId=" + id;
+        let employeeId = url.searchParams.get("id");
+        var url2 = "/empBookAdd?employeeId=" + employeeId;
+        $(location).attr('href',url2);
+    });
+    $("#makePdf").click(function() {
+        let url = new URL(window.location.href);
+        let employeeId = url.searchParams.get("id");
+        var url2 = "/employeeBook/" + employeeId;
         $(location).attr('href',url2);
     });
     </script>

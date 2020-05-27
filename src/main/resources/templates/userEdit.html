@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{userEdit.title}">Изменение параметров пользователя</title>
+    <style type="text/css">
+#my_body        { background-color: #fffff5; height: 100%; }
+h1              { text-align: center }
+.id             { width: 80px; text-align: left }
+.rolesysname    { width: 120px; text-align: left }
+.empfio         { width: 260px; text-align: left }
+.login          { width: 100px; text-align: left }
+.password       { width: 550px; text-align: left }
+.isenabled      { width: 80px; text-align: left }
+.email          { width: 150px; text-align: left }
+.center         { text-align: center }
+.btn2           { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; display:inline-block; }
+.row            { margin-top: 10px; }
+label           { display: inline-block; width: 150px; }
+input:read-only { background: lightgray; }
+    </style>
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+</head>
+<body id="my_body">
+
+    <form id="edit-form" action="userEdit.html">
+        <div>
+                <h1 th:text="#{userEdit.title}">Изменение параметров пользователя</h1>
+        </div>
+        
+        <div class="row">
+            <label for="id-input" th:text="#{userEdit.id}">Идентификатор:</label>
+            <input id="id-input" class="id" type="text" readonly="readonly" value="1"/>
+        </div>
+
+        <div class="row">
+            <label for="rolesysname-input" th:text="#{userEdit.rolesysname}">Системное имя роли:</label>
+            <select id = "rolesysname-input" class="rolesysname" name="rolesysname">
+            </select>
+        </div>
+
+        <div class="row">
+            <label for="empfio-input" th:text="#{userEdit.empfio}">ФИО сотрудника:</label>
+            <select id = "empfio-input" class="empfio" name="empfio">
+            </select>
+        </div>
+
+        <div class="row">
+            <label for="login-input" th:text="#{userEdit.login}">Логин:</label>
+            <input id="login-input" class="login" name="login" type="text" value="vasya"/>
+        </div>
+
+        <div class="row">
+            <label for="password-input" th:text="#{userEdit.password}">Хэш пароля:</label>
+            <input id="password-input" class="password" name="password" type="text" value="12345"/>
+        </div>
+
+        <div class="row">
+            <label for="isenabled-input" th:text="#{userEdit.isenabled}">Активен:</label>
+            <input id="isenabled-input" class="isenabled" name="isenabled" type="text" value="True"/>
+        </div>
+
+        <div class="row">
+            <label for="email-input" th:text="#{userEdit.email}">Эл.почта:</label>
+            <input id="email-input" class="email" name="email" type="text" value="vasya@mail.ru"/>
+        </div>
+
+        <div class="center">
+            <button id="returnButton" type="button" class="btn2" th:text="#{userEdit.back}">Назад</button>
+            <button type="submit" class="btn2" th:text="#{userEdit.save}">Сохранить</button>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            let url = new URL(window.location.href);
+            let roleId = url.searchParams.get("roleId");
+            $.get('/api/v1/authrole').done(function (roles) {
+                var $rolesysnameInput = $("#rolesysname-input");
+                roles.forEach(function (role) {
+                    $rolesysnameInput.append($("<option />").val(role.roleId).text(role.roleSysName));
+                });
+                $rolesysnameInput.val(roleId);
+            })
+        });
+        $(function () {
+            let url = new URL(window.location.href);
+            let employeeId = url.searchParams.get("employeeId");
+            $.get('/api/v1/employee').done(function (employees) {
+                var $empfioInput = $("#empfio-input");
+                employees.forEach(function (employee) {
+                    $empfioInput.append($("<option />").val(employee.employeeId).text(employee.empFio));
+                });
+                $empfioInput.val(employeeId);
+            })
+        });
+        $(function () {
+            let url = new URL(window.location.href);
+            let userId = url.searchParams.get("userId");
+            $.get('/api/v1/authuser/' + userId).done(function (userone) {
+                $("#id-input").val(userId);
+                $("#login-input").val(userone.login);
+                $("#password-input").val(userone.password);
+                $("#isenabled-input").val(userone.isEnabled);
+                $("#email-input").val(userone.email);
+            })
+        });
+        $("#edit-form").submit(function(userone) {
+            event.preventDefault();
+            let url = new URL(window.location.href);
+            let userId = url.searchParams.get("userId");
+            var data = {}
+            data["userId"] = userId;
+            data["login"] = $("#login-input").val();
+            data["password"] = $("#password-input").val();
+            data["isEnabled"] = $("#isenabled-input").val();
+            data["email"] = $("#email-input").val();
+            data["employeeId"] = $("#empfio-input option:selected").val();
+            data["roleid"] = $("#rolesysname-input option:selected").val();
+            $.ajax({
+                url: '/api/v1/authuser',
+                type: 'PUT',
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                dataType: 'json',
+                "error": function (xhr, status, error) {
+                    if(xhr.status=200) {
+                        var url2 = "/userList";
+                        $(location).attr('href',url2);
+                    } else {
+                        var errorMessage = xhr.status + ': ' + xhr.responseText;
+                        alert('Error - ' + errorMessage);
+                    }
+                }
+            });
+        });
+        $("#returnButton").click(function() {
+            event.preventDefault();
+            var url2 = "/userList";
+            $(location).attr('href',url2);
+        });
+    </script>
+</body>
+</html>

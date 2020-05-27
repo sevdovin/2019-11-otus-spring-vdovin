@@ -37,6 +37,9 @@ public class AuthUserDto {
     @ApiModelProperty(notes = "Системное наименование роли", example = "admin")
     private String roleSysName;
 
+    @ApiModelProperty(notes = "ФИО сотрудника", example = "Иванов Иван Иванович")
+    private String empFio;
+
     public static AuthUserDto buildDTO(AuthUser authUser) {
         AuthUserDto result = AuthUserDto.builder()
                 .userId(authUser.getUserId())
@@ -46,11 +49,21 @@ public class AuthUserDto {
                 .email(authUser.getEmail())
                 .build();
         if (authUser.getEmployee() != null) {
+            String lastName = authUser.getEmployee().getLastName();
+            String firstName = authUser.getEmployee().getFirstName();
+            String middleName = authUser.getEmployee().getMiddleName();
             result.setEmployeeId(authUser.getEmployee().getEmployeeId());
+            result.setEmpFio(lastName + " " + firstName + " " + middleName);
+        } else {
+            result.setEmployeeId(0L);
+            result.setEmpFio("");
         }
         if (authUser.getAuthRole() != null) {
             result.setRoleid(authUser.getAuthRole().getRoleId());
             result.setRoleSysName(authUser.getAuthRole().getRoleSysName());
+        } else {
+            result.setRoleid(0L);
+            result.setRoleSysName("");
         }
         return result;
     }

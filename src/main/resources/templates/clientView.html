@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{client.title}">Сотрудник предприятия</title>
+    <style type="text/css">
+#my_body        { background-color: #fffff5; height: 100%; }
+h1              { text-align: center }
+.center         { text-align: center }
+.btn2           { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; width: 20% }
+#name-input     { width: 500px }
+.row            { margin-top: 10px; }
+input:read-only { background: lightgray; }
+    </style>
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+</head>
+<body id="my_body">
+    <form id="edit-form" action="clientView.html">
+        <div>
+            <h1 th:text="#{client.title}">Сотрудник предприятия</h1>
+        </div>
+
+        <div class="row">
+            <label for="name-input" th:text="#{client.name}">Наименование предприятия:</label>
+            <input id="name-input" name="name" type="text" readonly="readonly" value="Рога и копыта"/>
+        </div>
+
+        <div class="row">
+            <label for="lastname-input" th:text="#{client.lastname}">Фамилия:</label>
+            <input id="lastname-input" name="lastname" type="text" readonly="readonly" value="Иванов"/>
+        </div>
+
+        <div class="row">
+            <label for="firstname-input" th:text="#{client.firstname}">Имя:</label>
+            <input id="firstname-input" name="firstname" type="text" readonly="readonly" value="Иван"/>
+        </div>
+
+        <div class="row">
+            <label for="middlename-input" th:text="#{client.middlename}">Отчество:</label>
+            <input id="middlename-input" name="middlename" type="text" readonly="readonly" value="Иванович"/>
+        </div>
+
+        <div class="row">
+            <label for="birthday-input" th:text="#{client.birthday}">День рождения:</label>
+            <input id="birthday-input" name="birthday" type="text" readonly="readonly" value="1990-12-31"/>
+        </div>
+
+        <div class="row">
+            <label for="snils-input" th:text="#{client.snils}">Снилс:</label>
+            <input id="snils-input" name="snils" type="text" readonly="readonly" value="11111"/>
+        </div>
+
+        <div class="center">
+            <button id="exitButton" type="button" class="btn2" th:text="#{client.logout}">Назад</button>
+            <button type="submit" class="btn2" th:text="#{client.book}">Трудовая книжка</button>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            let url = new URL(window.location.href);
+            let employeeId = url.searchParams.get("employeeId");
+            $.get('/api/v1/employee/' + employeeId).done(function (employee) {
+                $("#lastname-input").val(employee.lastName);
+                $("#firstname-input").val(employee.firstName);
+                $("#middlename-input").val(employee.middleName);
+                $("#birthday-input").val(employee.birthday);
+                $("#snils-input").val(employee.snils);
+            })
+            $.get('/api/v1/company/1').done(function (company) {
+                $("#name-input").val(company.companyName);
+            })
+        });
+        $("#exitButton").click(function() {
+            event.preventDefault();
+            var url = "/logout";
+            $(location).attr('href',url);
+        });
+        $("#edit-form").submit(function(record) {
+            event.preventDefault();
+            let url = new URL(window.location.href);
+            let employeeId = url.searchParams.get("employeeId");
+            var url2 = "/bookView?employeeId=" + employeeId;
+            $(location).attr('href',url2);
+        });
+    </script>
+</body>
+</html>

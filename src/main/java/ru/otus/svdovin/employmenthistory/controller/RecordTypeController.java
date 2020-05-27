@@ -24,7 +24,7 @@ public class RecordTypeController {
     @Autowired
     private RecordTypeProvider recordTypeProvider;
 
-    @GetMapping("/recordtype/{id}")
+    @GetMapping("/api/v1/recordtype/{id}")
     @ApiOperation(value = "Получение типа записи по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = RecordTypeDto.class),
@@ -50,7 +50,7 @@ public class RecordTypeController {
         }
     }
 
-    @GetMapping("/recordtype")
+    @GetMapping("/api/v1/recordtype")
     @ApiOperation(value = "Получение всех типов записи в трудовую книжку")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = RecordTypeDto.class, responseContainer = "List"),
@@ -74,7 +74,7 @@ public class RecordTypeController {
         }
     }
 
-    @PostMapping("/recordtype")
+    @PostMapping("/api/v1/recordtype")
     @ApiOperation(value = "Создание нового типа записи в трудовую книжку", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = Long.class),
@@ -102,7 +102,7 @@ public class RecordTypeController {
         }
     }
 
-    @PutMapping("/recordtype")
+    @PutMapping("/api/v1/recordtype")
     @ApiOperation(value = "Изменение типа записи в трудовую книжку", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),
@@ -131,7 +131,7 @@ public class RecordTypeController {
         }
     }
 
-    @DeleteMapping("/recordtype/{recordTypeId}")
+    @DeleteMapping("/api/v1/recordtype/{recordTypeId}")
     @ApiOperation(value = "Удаление типа записи в трудовую книжку", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

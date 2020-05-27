@@ -24,7 +24,7 @@ public class CompanyController {
     @Autowired
     private CompanyProvider companyProvider;
 
-    @GetMapping("/company/{id}")
+    @GetMapping("/api/v1/company/{id}")
     @ApiOperation(value = "Получение предприятия по идентификатору")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = CompanyDto.class),
@@ -50,7 +50,7 @@ public class CompanyController {
         }
     }
 
-    @PutMapping("/company")
+    @PutMapping("/api/v1/company")
     @ApiOperation(value = "Изменение атрибутов предприятия", notes = "Роли: personnelofficer")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No Content"),

@@ -1,9 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <title th:text="#{admin.title}">Администратор</title>
+    <style>
+#my_body { text-align: center; background-color: #fffff5 }
+h1       { text-align: center }
+.btn     { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; width: 20% }
+    </style>
 </head>
-<body>
-Страница с доступом только админу
+<body id="my_body">
+    <div>
+        <h1 th:text="#{admin.section}">Выберите раздел</h1>
+    </div>
+    <div>
+        <form action="/userList">
+            <button type="submit" class="btn" th:text="#{admin.userList}">Пользователи</button>
+        </form>
+        </br>
+        <form action="/roleList">
+            <button type="submit" class="btn" th:text="#{admin.roleList}">Роли</button>
+        </form>
+        </br>
+        <form action="/logout">
+            <button type="submit" class="btn" th:text="#{admin.logout}">Выйти</button>
+        </form>
+    </div>
 </body>
 </html>

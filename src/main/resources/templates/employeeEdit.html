@@ -8,14 +8,14 @@
 h1              { text-align: center }
 .center         { text-align: center }
 .btn2           { font-size: 16pt; color: #fff; background-color: #5cb85c; border-color: #4cae4c; margin: 5px; display:inline-block; }
-table           { width: 80%; margin-left: auto; margin-right: auto }
-table tbody     { height: 500px; overflow-y: scroll; display: block; }
-table thead     { display: block; }
 .row            { margin-top: 10px; }
 label           { display: inline-block; width: 150px; }
 input:read-only { background: lightgray; }
     </style>
-    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.1.12.1.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-ui.1.12.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/datepicker-ru.js}"></script>
 </head>
 <body id="my_body">
 
@@ -45,7 +45,7 @@ input:read-only { background: lightgray; }
         </div>
 
         <div class="row">
-            <label for="birthday-input" th:text="#{employeeEdit.birthday}">Имя:</label>
+            <label for="birthday-input" th:text="#{employeeEdit.birthday}">День рождения:</label>
             <input id="birthday-input" name="birthday" type="text" value="1990-12-31"/>
         </div>
 
@@ -63,7 +63,10 @@ input:read-only { background: lightgray; }
         $(function () {
             let url = new URL(window.location.href);
             let id = url.searchParams.get("id");
-            $.get('/employee/' + id).done(function (employee) {
+            $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+            $("#birthday-input").datepicker({ dateFormat: "yy-mm-dd" });
+            //$("#birthday-input").datepicker({ dateFormat: "yy-mm-dd" });
+            $.get('/api/v1/employee/' + id).done(function (employee) {
                 $("#lastname-input").val(employee.lastName);
                 $("#firstname-input").val(employee.firstName);
                 $("#middlename-input").val(employee.middleName);
@@ -83,7 +86,7 @@ input:read-only { background: lightgray; }
             data["birthday"] = $("#birthday-input").val();
             data["snils"] = $("#snils-input").val();
             $.ajax({
-                url: '/employee',
+                url: '/api/v1/employee',
                 type: 'PUT',
                 contentType: "application/json",
                 data: JSON.stringify(data),

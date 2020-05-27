@@ -10,7 +10,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
 import ru.otus.svdovin.employmenthistory.domain.AuthUser;
 import ru.otus.svdovin.employmenthistory.dto.AuthUserDto;
+import ru.otus.svdovin.employmenthistory.repository.AuthRoleRepository;
 import ru.otus.svdovin.employmenthistory.repository.AuthUserRepository;
+import ru.otus.svdovin.employmenthistory.repository.EmployeeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,12 @@ class AuthUserProviderImplTest {
 
     @MockBean
     private AuthUserRepository authUserRepository;
+
+    @MockBean
+    private AuthRoleRepository authRoleRepository;
+
+    @MockBean
+    private EmployeeRepository employeeRepository;
 
     @MockBean
     private MessageService messageService;

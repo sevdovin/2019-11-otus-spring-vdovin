@@ -36,6 +36,9 @@ public class EmployeeDto {
     @ApiModelProperty(notes = "СНИЛС", example = "078-123-765 26")
     private String snils;
 
+    @ApiModelProperty(notes = "ФИО", example = "Иванов Иван Иванович")
+    private String empFio;
+
     public static EmployeeDto buildDTO(Employee employee) {
         EmployeeDto result = EmployeeDto.builder()
                 .employeeId(employee.getEmployeeId())
@@ -44,6 +47,7 @@ public class EmployeeDto {
                 .middleName(employee.getMiddleName())
                 .birthday(employee.getBirthday())
                 .snils(employee.getSnils())
+                .empFio(employee.getLastName() + " " + employee.getFirstName() + " " + employee.getMiddleName())
                 .build();
         if (employee.getCompany() != null) {
             result.setCompanyId(employee.getCompany().getCompanyId());
