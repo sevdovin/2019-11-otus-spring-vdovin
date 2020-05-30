@@ -19,9 +19,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AuthUserDto userDto = authUserProvider.getAuthUserByLogin(username);
-        return new org.springframework.security.core.userdetails.User(userDto.getLogin(), userDto.getPassword(),
-                getAuthorities(userDto.getRoleSysName()));
+        try {
+            AuthUserDto userDto = authUserProvider.getAuthUserByLogin(username);
+            return new org.springframework.security.core.userdetails.User(userDto.getLogin(), userDto.getPassword(),
+                    getAuthorities(userDto.getRoleSysName()));
+        } catch (Exception e) {
+            throw new UsernameNotFoundException(username, e);
+        }
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(String roleSysName) {

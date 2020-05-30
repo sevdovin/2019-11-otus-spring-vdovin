@@ -1,9 +1,9 @@
 package ru.otus.svdovin.employmenthistory.controller;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +14,15 @@ import ru.otus.svdovin.employmenthistory.service.AuthUserProvider;
 
 import javax.validation.Valid;
 
-import java.util.List;
-
 import static ru.otus.svdovin.employmenthistory.exception.ExceptionUtils.buildErrorData;
 
+@RequiredArgsConstructor
 @RestController
 @Api(description = "REST API для пользователей", tags = { "AuthUser / Пользователи" })
 public class AuthUserController {
     private Logger logger = LogManager.getLogger();
     
-    @Autowired
-    private AuthUserProvider authUserProvider;
+    private final AuthUserProvider authUserProvider;
 
     @GetMapping("/authuser/{id}")
     @ApiOperation(value = "Получение пользователя по идентификатору")

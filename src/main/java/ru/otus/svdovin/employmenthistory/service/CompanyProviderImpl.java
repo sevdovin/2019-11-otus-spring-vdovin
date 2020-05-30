@@ -1,5 +1,6 @@
 package ru.otus.svdovin.employmenthistory.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.svdovin.employmenthistory.domain.Company;
@@ -8,16 +9,12 @@ import ru.otus.svdovin.employmenthistory.exception.APIException;
 import ru.otus.svdovin.employmenthistory.exception.ErrorCode;
 import ru.otus.svdovin.employmenthistory.repository.CompanyRepository;
 
+@RequiredArgsConstructor
 @Service
 public class CompanyProviderImpl implements CompanyProvider {
 
     private final CompanyRepository companyRepository;
     private final MessageService messageService;
-
-    public CompanyProviderImpl(CompanyRepository companyRepository, MessageService messageService) {
-        this.companyRepository = companyRepository;
-        this.messageService = messageService;
-    }
 
     @Transactional(readOnly = true)
     @Override

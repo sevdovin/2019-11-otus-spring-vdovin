@@ -1,5 +1,6 @@
 package ru.otus.svdovin.employmenthistory.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,7 +8,6 @@ import ru.otus.svdovin.employmenthistory.domain.AuthRole;
 import ru.otus.svdovin.employmenthistory.domain.AuthUser;
 import ru.otus.svdovin.employmenthistory.domain.Employee;
 import ru.otus.svdovin.employmenthistory.dto.AuthUserDto;
-import ru.otus.svdovin.employmenthistory.dto.EmployeeDto;
 import ru.otus.svdovin.employmenthistory.exception.APIException;
 import ru.otus.svdovin.employmenthistory.exception.ErrorCode;
 import ru.otus.svdovin.employmenthistory.repository.AuthRoleRepository;
@@ -18,6 +18,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+@RequiredArgsConstructor
 @Service
 public class AuthUserProviderImpl implements AuthUserProvider {
 
@@ -25,14 +26,6 @@ public class AuthUserProviderImpl implements AuthUserProvider {
     private final AuthRoleRepository authRoleRepository;
     private final EmployeeRepository employeeRepository;
     private final MessageService messageService;
-
-    public AuthUserProviderImpl(AuthUserRepository authUserRepository, AuthRoleRepository authRoleRepository,
-                                EmployeeRepository employeeRepository, MessageService messageService) {
-        this.authUserRepository = authUserRepository;
-        this.authRoleRepository = authRoleRepository;
-        this.employeeRepository = employeeRepository;
-        this.messageService = messageService;
-    }
 
     @Transactional(readOnly = true)
     @Override

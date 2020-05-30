@@ -1,5 +1,6 @@
 package ru.otus.svdovin.employmenthistory.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+@RequiredArgsConstructor
 @Service
 public class EmployeeProviderImpl implements EmployeeProvider {
 
@@ -23,14 +25,6 @@ public class EmployeeProviderImpl implements EmployeeProvider {
     private final CompanyRepository companyRepository;
     private final RecordRepository recordRepository;
     private final MessageService messageService;
-
-    public EmployeeProviderImpl(EmployeeRepository employeeRepository, CompanyRepository companyRepository,
-                                RecordRepository recordRepository, MessageService messageService) {
-        this.employeeRepository = employeeRepository;
-        this.companyRepository = companyRepository;
-        this.recordRepository = recordRepository;
-        this.messageService = messageService;
-    }
 
     @Transactional(readOnly = true)
     @Override

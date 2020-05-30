@@ -1,9 +1,9 @@
 package ru.otus.svdovin.employmenthistory.controller;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +16,13 @@ import javax.validation.Valid;
 
 import static ru.otus.svdovin.employmenthistory.exception.ExceptionUtils.buildErrorData;
 
+@RequiredArgsConstructor
 @RestController
 @Api(description = "REST API для типов записей в трудовую книжку", tags = { "RecordType / Типы записей" })
 public class RecordTypeController {
     private Logger logger = LogManager.getLogger();
     
-    @Autowired
-    private RecordTypeProvider recordTypeProvider;
+    private final RecordTypeProvider recordTypeProvider;
 
     @GetMapping("/api/v1/recordtype/{id}")
     @ApiOperation(value = "Получение типа записи по идентификатору")

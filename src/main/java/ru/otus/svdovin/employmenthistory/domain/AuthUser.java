@@ -32,8 +32,8 @@ public class AuthUser {
     @Column(name = "email")
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "employeeid", referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "employeeid")
     private Employee employee;
 
     @ManyToOne
