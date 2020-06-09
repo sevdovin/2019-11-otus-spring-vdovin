@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: testdb
+
+  messages:
+    basename: i18n/bundle
+    encoding: UTF-8
+
+application:
+  locale: ru_RU
+
+#logging:
+#  level:
+#    root: ERROR

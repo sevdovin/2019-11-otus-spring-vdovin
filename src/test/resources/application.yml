@@ -1,0 +1,14 @@
+spring:
+  data:
+#    mongodb:
+#      host: localhost
+#      port: 27017
+#      database: testdb
+
+    mongodb:
+      port: 0
+      database: testdb2
+
+#  shell:
+#    interactive:
+#      enabled: false
