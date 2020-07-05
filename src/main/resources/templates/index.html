@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="#{index.title}">Библиотека</title>
+    <style>
+#my_body { text-align: center; }
+a        { color: black; }
+h1       { color: blue; }
+
+    </style>
+</head>
+<body id="my_body">
+	<div class="starter-template">
+		<h1 th:text="#{index.welcome}">Добро пожаловать в библиотеку</h1>
+		<h2>
+			<a th:href="@{/books}" href="book-list.html"
+			   th:text="#{index.books}">Книги</a>
+		</h2>
+		<h2>
+			<a th:href="@{/authors}" href="author-list.html"
+				th:text="#{index.authors}">Авторы</a>
+		</h2>
+		<h2>
+			<a th:href="@{/genres}" href="genre-list.html"
+				th:text="#{index.genres}">Жанры</a>
+		</h2>
+	</div>
+</body>
+</html>
