@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="#{books.title}">Список книг</title>
+    <style type="text/css">
+body              { padding: 50px; }
+h1                { text-align: left }
+.books, .books td { border: 1px solid lightgray; padding: 5px; }
+button            { margin: 5px; }
+    </style>
+	<script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+</head>
+<body>
+    <div>
+		<h1 th:text="#{books.title}">Список книг</h1>
+    </div>
+    <div>
+		<table class="books" border="1">
+			<thead>
+			<tr>
+				<th id="books.column.id" th:text="#{books.id}">Идентификатор</th>
+				<th id="books.column.genre" th:text="#{books.genre}">Жанр</th>
+				<th id="books.column.author" th:text="#{books.author}">Автор(ы)</th>
+				<th id="books.column.name" th:text="#{books.name}">Наименование</th>
+				<th id="books.column.action" th:text="#{books.action}" colspan="2">Действие</th>
+			</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<div class="center">
+		<form action="/book-create">
+			<button id="bookAdd" type="submit" th:text="#{books.add}">Добавить</button>
+		</form>
+	</div>
+	<script>
+		$(function () {
+			$.get('/api/v1/book').done(function (books) {
+				books.forEach(function (book) {
+					$('tbody').append(`
+                    <tr>
+                        <td>${book.bookId}</td>
+                        <td>${book.genre.genreName}</td>
+                        <td>${book.authorsInfo}</td>
+                        <td>${book.bookName}</td>
+                        <td><a href="/book-edit/${book.bookId}" th:text="#{books.edit}">Изменить</a></td>
+                        <td><a href="/book-delete/${book.bookId}" th:text="#{books.delete}">Удалить</a></td>
+                    </tr>
+                `)
+				});
+			})
+		});
+		$("#bookAdd").click(function() {
+			var url = "/book-create";
+			$(location).attr('href',url);
+		});
+	</script>
+</body>
+</html>

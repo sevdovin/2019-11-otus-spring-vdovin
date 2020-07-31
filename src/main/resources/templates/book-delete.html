@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="#{book.delete.title}">Удаление книги</title>
+	<link rel="stylesheet" href="../static/css/pure.css" th:href="@{/css/pure.css}">
+    <style type="text/css">
+body            { padding: 50px; }
+label           { display: inline-block; width: 120px; vertical-align: top; }
+input:read-only { background: lightgray; }
+input, select   { width: 400px; }
+.row            { margin-top: 10px; }
+	</style>
+	<script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+</head>
+<body>
+    <form id="edit-form" action="book-delete.html">
+		<h1 th:text="#{book.delete.header}">Удаление книги:</h1>
+		<div class="row">
+			<label for="id-input" th:text="#{book.delete.id}">Идентификатор:</label>
+			<input id="id-input" name="bookId" type="text" readonly="readonly" value="1" />
+		</div>
+		<div class="row">
+			<label for="name-input" th:text="#{book.delete.name}">Наименование:</label>
+			<input id="name-input" name="bookName" type="text" readonly="readonly" value="Вечера на хуторе"/>
+		</div>
+		<div class="row">
+			<label for="genre-input" th:text="#{book.delete.genre}">Жанр:</label>
+			<input id="genre-input" name="genreName" type="text" readonly="readonly" value="Анекдот"/>
+		</div>
+		<div class="row">
+			<p><span th:text="#{book.delete.authors}">Авторы:</span></p>
+			<table class="pure-table">
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		<div class="row">
+			<button type="button" onclick="save()" th:text="#{book.delete.delete}">Удалить</button>
+		</div>
+	</form>
+	<script>
+		$(function () {
+			let url= window.location.pathname;
+			let urlVariables = url.split('/');
+			let id = urlVariables.pop();
+			$.get('/api/v1/book/' + id).done(function (book) {
+				let $idInput = $("#id-input");
+				let $nameInput = $("#name-input");
+				let $genreInput = $("#genre-input");
+				$idInput.val(book.bookId);
+				$nameInput.val(book.bookName);
+				$genreInput.val(book.genre.genreName);
+				book.authors.forEach(function (author) {
+					$('tbody').append(`
+						<tr>
+							<td>
+								<input name="authorId"+${author.authorId} type="text" readonly="readonly" value="${author.authorName}" />
+							</td>
+						</tr>
+                	`)
+				});
+			})
+		});
+		function save() {
+			let id = $("#id-input").val();
+			$.ajax({
+				url: '/api/v1/book/' + id,
+				type: 'DELETE',
+				success: function(result) {
+					$(location).attr('href', "/books");
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(xhr.status);
+					alert(thrownError);
+				}
+			});
+		}
+	</script>
+</body>
+</html>

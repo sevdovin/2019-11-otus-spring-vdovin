@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="#{book.create.title}">Добавление книги</title>
+	<link rel="stylesheet" href="../static/css/pure.css" th:href="@{/css/pure.css}">
+    <style type="text/css">
+body            { padding: 50px; }
+label           { display: inline-block; width: 120px; vertical-align: top; }
+input:read-only { background: lightgray; }
+input, select   { width: 400px; }
+.row            { margin-top: 10px; }
+	</style>
+	<script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+</head>
+<body>
+    <form id="edit-form" action="book-create.html">
+		<h1 th:text="#{book.create.header}">Информация о книге:</h1>
+		<div class="row">
+			<label for="name-input" th:text="#{book.edit.name}">Наименование:</label>
+			<input id="name-input" name="bookName" type="text" value="Вечера на хуторе"/>
+		</div>
+		<div class="row">
+			<label for="genre-input" th:text="#{book.create.genre}">Жанр:</label>
+			<select id = "genre-input">
+			</select>
+		</div>
+		<div class="row">
+			<label for="author-input" th:text="#{book.create.authors}">Авторы:</label>
+			<select id = "author-input" size="5" multiple>
+			</select>
+		</div>
+		<div class="row">
+			<button type="button" onclick="save()" th:text="#{book.create.save}">Сохранить</button>
+		</div>
+	</form>
+	<script>
+		$(function () {
+			$.get('/api/v1/genre').done(function (genres) {
+				let $genreInput = $("#genre-input");
+				genres.forEach(function (genre) {
+					$genreInput.append($("<option />").val(genre.genreId).text(genre.genreName));
+				});
+			})
+		});
+		$(function () {
+			$.get('/api/v1/author').done(function (authors) {
+				let $authorInput = $("#author-input");
+				authors.forEach(function (author) {
+					$authorInput.append($("<option />").val(author.authorId).text(author.authorName));
+				});
+			})
+		});
+		$(function () {
+			let $nameInput = $("#name-input");
+			$nameInput.val('');
+		});
+		function save() {
+			let $nameInput = $("#name-input");
+			if (!$nameInput.val()) {
+				alert("[[#{book.edit.name.empty}]]");
+				return;
+			}
+			let data = {};
+			data["bookName"] = $nameInput.val();
+			let $genreSelected = $("#genre-input option:selected");
+			let genre = {};
+			genre["genreId"] = $genreSelected.val();
+			genre["genreName"] = $genreSelected.text();
+			data["genre"] = genre;
+			let element = document.getElementById('author-input');
+			let count = 0;
+			let authors = [];
+			for (let i = 0; i < element.options.length; i++) {
+				if (element.options[i].selected) {
+					count++;
+					let author = {};
+					author["authorId"] = element.options[i].value;
+					author["authorName"] = element.options[i].text;
+					authors.push(author);
+				}
+			}
+			if (count === 0) {
+				alert("[[#{book.edit.authors.empty}]]");
+				return;
+			}
+			data["authors"] = authors;
+			$.ajax({
+				url: '/api/v1/book',
+				type: 'POST',
+				contentType: "application/json",
+				data: JSON.stringify(data),
+				dataType: 'json',
+				success: function(result) {
+					$(location).attr('href', "/books");
+				}
+			});
+		}
+	</script>
+</body>
+</html>
