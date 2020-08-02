@@ -25,6 +25,7 @@ public class MongoDBInit {
     private Genre genre5;
 
     private Book book1;
+    private Book book2;
 
     @ChangeSet(order = "000", id = "dropDB", author = "svdovin", runAlways = true)
     public void dropDB(MongoDatabase database) {
@@ -52,7 +53,7 @@ public class MongoDBInit {
     @ChangeSet(order = "003", id = "insertBooks", author = "svdovin", runAlways = true)
     public void insertBooks(MongoTemplate template) {
         book1 = template.save(new Book("5edfdcce81099316f7254c9b", "Война и мир", genre1, Arrays.asList(author1)));
-        template.save(new Book("5edfdcce81099316f7254c9c", "Лукоморье", genre2, Arrays.asList(author2)));
+        book2 = template.save(new Book("5edfdcce81099316f7254c9c", "Лукоморье", genre2, Arrays.asList(author2)));
         template.save(new Book("5edfdcce81099316f7254c9d", "Евгений Онегин", genre1, Arrays.asList(author2)));
         template.save(new Book("5edfdcce81099316f7254c9e", "Много шума из ничего", genre3, Arrays.asList(author3)));
         template.save(new Book("5edfdcce81099316f7254c9f", "Отелло", genre4, Arrays.asList(author3,author1)));
@@ -63,5 +64,6 @@ public class MongoDBInit {
     public void insertComments(MongoTemplate template) {
         template.save(new Comment("5edfdcce81099316f7254ca1", "Роман", book1));
         template.save(new Comment("5edfdcce81099316f7254ca2", "Сказка", book1));
+        template.save(new Comment("5edfdcce81099316f7254ca3", "Пьеса", book2));
     }
 }
