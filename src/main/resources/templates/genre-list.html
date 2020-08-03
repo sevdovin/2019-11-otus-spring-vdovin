@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{genres.title}">Список авторов</title>
+    <style>
+body                  { padding: 50px; }
+h1                    { text-align: left }
+.genres, .genres td { border: 1px solid lightgray; padding: 5px; }
+    </style>
+</head>
+<body>
+    <div>
+        <h1 th:text="#{genres.title}">Список авторов</h1>
+    </div>
+    <div>
+        <table class="genres">
+            <thead>
+            <tr>
+                <th id="genre.column.id" th:text="#{genres.id}">Идентификатор</th>
+                <th id="genre.column.name" th:text="#{genres.name}">Наименование</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="genre : ${genres}">
+                <td th:text="${genre.genreId}">1</td>
+                <td th:text="${genre.genreName}">Роман</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
