@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="#{books.title}">Список книг</title>
+    <style type="text/css">
+body              { padding: 50px; }
+h1                { text-align: left }
+.books, .books td { border: 1px solid lightgray; padding: 5px; }
+button            { margin: 5px; }
+
+    </style>
+</head>
+
+<body>
+    <div>
+		<h1 th:text="#{books.title}">Список книг</h1>
+    </div>
+    <div>
+		<table class="books" border="1">
+			<thead>
+			<tr>
+				<th id="books.column.id" th:text="#{books.id}">Идентификатор</th>
+				<th id="books.column.genre" th:text="#{books.genre}">Жанр</th>
+				<th id="books.column.author" th:text="#{books.author}">Автор(ы)</th>
+				<th id="books.column.name" th:text="#{books.name}">Наименование</th>
+				<th id="books.column.action" th:text="#{books.action}" colspan="2" sec:authorize="hasRole('ROLE_ADMIN')">Действие</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="book :${books}">
+				<td th:text="${book.bookId}">1</td>
+				<td th:text="${book.genre.genreName}">Роман</td>
+				<td th:text="${book.getAuthorsInfo()}">Иванов Иван</td>
+				<td th:text="${book.bookName}">Вечера на хуторе</td>
+				<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/book-edit(id=${book.bookId})}"  href="book-edit.html" th:text="#{books.edit}">Изменить</a></td>
+				<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/book-delete(id=${book.bookId})}" href="book-delete.html" th:text="#{books.delete}">Удалить</a></td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="center" sec:authorize="hasRole('ROLE_ADMIN')">
+		<form action="/book-create">
+			<button type="submit" th:text="#{books.add}">Добавить</button>
+		</form>
+	</div>
+</body>
+</html>

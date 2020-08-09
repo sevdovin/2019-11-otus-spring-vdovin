@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="#{book.create.title}">Добавление книги</title>
+	<link rel="stylesheet" href="../static/css/pure.css" th:href="@{/css/pure.css}">
+    <style type="text/css">
+body            { padding: 50px; }
+label           {	display: inline-block; width: 120px; }
+input:read-only { background: lightgray; }
+input, select   { width: 400px; }
+.row            { margin-top: 10px; }
+	</style>
+</head>
+<body>
+    <form id="edit-form" th:action="@{/books}" th:method="post" action="book-create.html">
+		<h1 th:text="#{book.create.header}">Информация о книге:</h1>
+		<div class="row">
+			<label for="id-input" th:text="#{book.create.id}">Идентификатор:</label>
+			<input id="id-input" name="bookId" type="text" readonly="readonly" th:value="${book.bookId}" value="1" />
+		</div>
+		<div class="row">
+			<label for="title-input" th:text="#{book.create.name}">Наименование:</label>
+			<input id="title-input" name="bookName" type="text" th:value="${book.bookName}" value="Вечера на хуторе"/>
+		</div>
+		<div class="row">
+			<label for="genre-input" th:text="#{book.create.genre}">Жанр:</label>
+			<select id = "genre-input" th:field="${book.genre}">
+				<option th:each="genre : ${genres}"
+						th:value="${genre.genreId}"
+						th:text="${genre.genreName}"
+						th:selected="${ genre.genreId == book.genre.genreId }"
+				>Драма</option>
+			</select>
+		</div>
+		<div class="pure-control-group">
+			<p><span th:text="#{book.create.authors}">Авторы:</span></p>
+			<table class="pure-table">
+				<tr th:each="author, status : ${book.authors}">
+					<td>
+						<input name="authorName" type="text" readonly="readonly"
+							   th:field="*{book.authors[__${status.index}__].authorName}" value="Толстой Лев Николаевич" />
+					</td>
+					<td>
+						<input type="hidden" name="authorId" th:field="*{book.authors[__${status.index}__].authorId}">
+						<button th:if="${#lists.size(book.authors)>1}" type="submit" name="removeAuthor"
+								th:value="${status.index}" th:text="#{book.create.author.delete}">Удалить</button>
+					</td>
+				</tr>
+				<tr th:if="!${#lists.isEmpty(filteredAuthors)}">
+					<td colspan="2"><b th:text="#{book.create.author.addAuthor}">Добавление автора</b></td>
+				</tr>
+				<tr th:if="!${#lists.isEmpty(filteredAuthors)}">
+					<td>
+						<select id="author" name="authorId">
+							<option th:each="author:${filteredAuthors}" value="1" th:value="${author.authorId}"
+									th:text="${author.authorName}">
+								Толстой Л.Н.
+							</option>
+						</select>
+					</td>
+					<td>
+						<button type="submit" name="addAuthor" th:text="#{book.create.author.add}">Добавить</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="row">
+			<button type="submit" th:text="#{book.create.save}">Сохранить</button>
+		</div>
+	</form>
+</body>
+</html>

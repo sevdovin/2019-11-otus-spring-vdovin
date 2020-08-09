@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="#{book.delete.title}">Удаление книги</title>
+	<link rel="stylesheet" href="../static/css/pure.css" th:href="@{/css/pure.css}">
+    <style type="text/css">
+body            { padding: 50px; }
+label           {	display: inline-block; width: 120px; }
+input:read-only { background: lightgray; }
+input, select   { width: 400px; }
+.row            { margin-top: 10px; }
+	</style>
+</head>
+<body>
+    <form id="edit-form" th:action="@{/books}" th:method="delete" action="book-delete.html">
+		<h1 th:text="#{book.delete.header}">Удаление книги:</h1>
+		<div class="row">
+			<label for="id-input" th:text="#{book.delete.id}">Идентификатор:</label>
+			<input id="id-input" name="bookId" type="text" readonly="readonly" th:value="${book.bookId}" value="1" />
+		</div>
+		<div class="row">
+			<label for="title-input" th:text="#{book.delete.name}">Наименование:</label>
+			<input id="title-input" name="bookName" type="text" readonly="readonly" th:value="${book.bookName}" value="Вечера на хуторе"/>
+		</div>
+		<div class="row">
+			<label for="genre-input" readonly="readonly" th:text="#{book.delete.genre}">Жанр:</label>
+			<input id="genre-input" name="genreName" type="text" readonly="readonly" th:value="${book.genre.genreName}" value="Драма"/>
+		</div>
+		<div class="pure-control-group">
+			<p><span th:text="#{book.delete.authors}">Авторы:</span></p>
+			<table class="pure-table">
+				<tr th:each="author, status : ${book.authors}">
+					<td>
+						<input name="authorName" type="text" readonly="readonly"
+							   th:field="*{book.authors[__${status.index}__].authorName}" value="Толстой Лев Николаевич" />
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="row">
+			<button type="submit" th:text="#{book.delete.delete}">Удалить</button>
+		</div>
+	</form>
+</body>
+</html>
