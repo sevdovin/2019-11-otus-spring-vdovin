@@ -1,0 +1,28 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: testdb
+
+  shell:
+    interactive:
+      enabled: true
+
+  batch:
+    job:
+      enabled: false
+    initialize-schema: always
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://dfddcdb:5432/sv25test
+    username: sv25test
+    password: 12345678
+    hikari:
+      connection-test-query: select 1
+    initialization-mode: always
+    schema: classpath:db/structure.sql
+
+application:
+  chunkSize: 10
