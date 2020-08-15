@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    data: test-data.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+
+  shell:
+    interactive:
+      enabled: false

@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    initialization-mode: always
+    schema: classpath:schema.sql
+    data: classpath:data.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+
+  messages:
+    basename: i18n/bundle
+    encoding: UTF-8
+
+  data:
+    rest:
+      base-path: /datarest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics, health, logfile, info
+  endpoint:
+    health:
+      show-details: always
+
+application:
+  locale: ru_RU
+
+server:
+  error:
+    include-stacktrace: always
+
+logging:
+  file: "target/app.log"
